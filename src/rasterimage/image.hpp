@@ -1,17 +1,11 @@
 #pragma once
 
 #include <array>
+#include <variant>
 
 #include <r4/vector.hpp>
 
 namespace rasterimage{
-
-enum class pixel_format{
-    luminance,
-    luminance_alpha,
-    rgb,
-    rgba
-};
 
 template <typename channel_type>
 class channel{
@@ -25,26 +19,44 @@ public:
 
 };
 
-template <typename channel_type, pixel_format format>
+template <typename channel_type, size_t num_channels>
 class static_format_image{
+public:
     using pixel_type =
-        std::conditional_t<format == pixel_format::luminance,
-            channel_type,
-        std::conditional_t<format == pixel_format::luminance_alpha,
-            r4::vector2<channel_type>,
-        std::conditional_t<format == pixel_format::rgb,
-            r4::vector3<channel_type>,
-        std::conditional_t<format == pixel_format::rgba,
-            r4::vector4<channel_type>,
-        std::enable_if_t<false, void>
-        >>>>;
+        std::enable_if_t<1 <= num_channels || num_channels <= 4, 
+            std::conditional_t<num_channels == 1,
+                channel_type,
+                r4::vector<channel_type, num_channels>   
+            >
+        >;
 
+private:
     std::vector<pixel_type> buffer;
 
-    size_t stride;
-
+    r4::vector2<uint32_t> dimensions;
 public:
 
+    const decltype(dimensions)& dims()const noexcept{
+        return this->dimensions;
+    }
+};
+
+class image{
+    std::variant<
+        static_format_image<uint8_t, 1>,
+        static_format_image<uint8_t, 2>,
+        static_format_image<uint8_t, 3>,
+        static_format_image<uint8_t, 4>,
+        static_format_image<uint16_t, 1>,
+        static_format_image<uint16_t, 2>,
+        static_format_image<uint16_t, 3>,
+        static_format_image<uint16_t, 4>,
+        static_format_image<float, 1>,
+        static_format_image<float, 2>,
+        static_format_image<float, 3>,
+        static_format_image<float, 4>
+    > imvar;
+public:
 };
 
 }

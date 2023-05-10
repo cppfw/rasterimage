@@ -1,11 +1,12 @@
 #pragma once
 
-#include "dimensioned_2d.hpp"
+#include <r4/vector.hpp>
 
 namespace rasterimage{
 
 template <typename channel_type, size_t num_channels>
-class static_format_image : public dimensioned_2d<uint32_t>{
+class static_format_image{
+    r4::vector2<uint32_t> dimensions;
 public:
     using pixel_type =
         std::enable_if_t<1 <= num_channels || num_channels <= 4, 
@@ -18,6 +19,10 @@ public:
 private:
     std::vector<pixel_type> buffer;
 public:
+
+    const decltype(dimensions)& dims()const noexcept{
+        return this->dimensions;
+    }
 };
 
 }

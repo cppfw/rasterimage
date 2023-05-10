@@ -1,11 +1,11 @@
 #pragma once
 
-#include "image_base.hpp"
+#include "dimensioned_2d.hpp"
 
 namespace rasterimage{
 
 template <typename channel_type, size_t num_channels>
-class static_format_image : public image_base{
+class static_format_image : public dimensioned_2d<uint32_t>{
 public:
     using pixel_type =
         std::enable_if_t<1 <= num_channels || num_channels <= 4, 

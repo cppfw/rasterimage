@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utki/span.hpp>
 #include <r4/vector.hpp>
 
 namespace rasterimage{
@@ -19,6 +20,22 @@ public:
 private:
     std::vector<pixel_type> buffer;
 public:
+
+    class iterator{
+        utki::span<pixel_type> line;
+
+        iterator(utki::span<pixel_type> line) :
+            line(line)
+        {}
+
+    public:
+        using iterator_category = std::input_iterator_tag;
+        using difference_type = int;
+        using value_type = decltype(line);
+        using reference = value_type;
+
+        iterator() = default;
+    };
 
     const decltype(dimensions)& dims()const noexcept{
         return this->dimensions;

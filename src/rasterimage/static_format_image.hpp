@@ -75,6 +75,13 @@ public:
         }
     };
 
+    static_format_image() = default;
+
+    static_format_image(r4::vector2<uint32_t> dimensions):
+        dimensions(dimensions),
+        buffer(this->dimensions.x() * this->dimensions.y())
+    {}
+
     const decltype(dimensions)& dims()const noexcept{
         return this->dimensions;
     }
@@ -96,6 +103,10 @@ public:
                 p = val;
             }
         }
+    }
+
+    utki::span<pixel_type> pixels()noexcept{
+        return this->buffer;
     }
 };
 

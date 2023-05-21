@@ -31,5 +31,26 @@ tst::set set("image", [](tst::suite& suite){
             }
         }
     });
+
+    suite.add("iterator_plus_equals__difference_type", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+        auto j = i;
+
+        i += 3;
+
+        ++j;
+        ++j;
+        ++j;
+
+        tst::check(i == j, SL);
+
+        i += -2;
+
+        --j;
+        --j;
+    });
 });
 }

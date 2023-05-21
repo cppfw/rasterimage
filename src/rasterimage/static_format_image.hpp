@@ -32,7 +32,7 @@ public:
 
     public:
         using iterator_category = std::input_iterator_tag;
-        using difference_type = int64_t;
+        using difference_type = int32_t;
         using value_type = decltype(line);
         using reference = value_type;
 
@@ -67,11 +67,25 @@ public:
             return *this;
         }
 
+        iterator& operator--()noexcept{
+            this->line = utki::make_span(this->line.data() - this->line.size(), this->line.size());
+            return *this;
+        }
+
         // postfix increment
         iterator operator++(int)noexcept{
             iterator ret(*this);
             this->operator++();
             return ret;
+        }
+
+        iterator& operator+=(difference_type d)noexcept{
+            this->line = utki::make_span(
+                this->line.data() + d * this->line.size(),
+                this->line.size()
+            );
+
+            return *this;
         }
     };
 
@@ -80,7 +94,9 @@ public:
     static_format_image(r4::vector2<uint32_t> dimensions):
         dimensions(dimensions),
         buffer(this->dimensions.x() * this->dimensions.y())
-    {}
+    {
+        
+    }
 
     const decltype(dimensions)& dims()const noexcept{
         return this->dimensions;

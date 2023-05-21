@@ -7,7 +7,7 @@ namespace rasterimage{
 
 template <typename channel_type, size_t num_channels>
 class static_format_image{
-    r4::vector2<uint32_t> dimensions;
+    r4::vector2<uint32_t> dimensions{0, 0};
 public:
     using pixel_type =
         std::enable_if_t<1 <= num_channels || num_channels <= 4, 
@@ -22,6 +22,8 @@ private:
 public:
 
     class iterator{
+        friend class static_format_image;
+
         utki::span<pixel_type> line;
 
         iterator(utki::span<pixel_type> line) :
@@ -30,15 +32,70 @@ public:
 
     public:
         using iterator_category = std::input_iterator_tag;
-        using difference_type = int;
+        using difference_type = int64_t;
         using value_type = decltype(line);
         using reference = value_type;
 
         iterator() = default;
+
+        bool operator!=(const iterator& i)const noexcept{
+            return this->line.data() != i.line.data();
+        }
+
+        bool operator==(const iterator& i)const noexcept{
+            return this->line.data() == i.line.data();
+        }
+
+        utki::span<pixel_type> operator*()noexcept{
+            return this->line;
+        }
+
+        utki::span<const pixel_type> operator*()const noexcept{
+            return this->line;
+        }
+
+        utki::span<pixel_type>* operator->()noexcept{
+            return &this->line;
+        }
+
+        const utki::span<const pixel_type>* operator->()const noexcept{
+            return &this->line;
+        }
+
+        iterator& operator++()noexcept{
+            this->line = utki::make_span(this->line.data() + this->line.size(), this->line.size());
+            return *this;
+        }
+
+        // postfix increment
+        iterator operator++(int)noexcept{
+            iterator ret(*this);
+            this->operator++();
+            return ret;
+        }
     };
 
     const decltype(dimensions)& dims()const noexcept{
         return this->dimensions;
+    }
+
+    iterator begin()noexcept{
+        return iterator(utki::make_span(this->buffer.data(), this->dimensions.x()));
+    }
+
+    iterator end()noexcept{
+        return iterator(utki::make_span(
+            this->buffer.data() + this->dimensions.x() * this->dimensions.y(),
+            0
+        ));
+    }
+
+    void clear(pixel_type val){
+        for(auto l : *this){
+            for(auto& p : l){
+                p = val;
+            }
+        }
     }
 };
 

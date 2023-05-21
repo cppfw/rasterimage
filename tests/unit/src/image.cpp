@@ -51,6 +51,8 @@ tst::set set("image", [](tst::suite& suite){
 
         --j;
         --j;
+
+        tst::check(i == j, SL);
     });
 });
 }

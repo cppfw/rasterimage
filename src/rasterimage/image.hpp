@@ -23,6 +23,8 @@ class image{
         static_format_image<channel<float>, 4>
     > imvar;
 public:
+
+    unsigned num_channels()const noexcept;
 };
 
 }

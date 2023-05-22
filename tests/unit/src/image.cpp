@@ -142,7 +142,90 @@ tst::set set("image", [](tst::suite& suite){
     });
 
     suite.add("iterator_operator_minus__iterator", [](){
-        // TODO:
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+        auto j = i;
+
+        j += 4;
+
+        tst::check_eq(j - i, 4, SL);
+        tst::check_eq(i - j, -4, SL);
+    });
+
+    suite.add("iterator_operator_square_brackets__difference_type", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        decltype(im)::pixel_type expected = {0, 1, 2, 3};
+
+        auto i = im.begin();
+        im.pixels()[im.dims().x() * 2 + 3] = expected;
+
+        tst::check_eq(i[2][3], expected, SL);
+
+        i += 3;
+
+        tst::check_eq(i[-1][3], {0, 1, 2, 3}, SL);
+    });
+
+    suite.add("iterator_operator_less_than__iterator", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+
+        auto j = i + 3;
+
+        tst::check(i < j, SL);
+        tst::check(!(j < i), SL);
+    });
+
+    suite.add("iterator_operator_greater_than__iterator", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+
+        auto j = i + 3;
+
+        tst::check(j > i, SL);
+        tst::check(!(i > j), SL);
+    });
+
+    suite.add("iterator_operator_greater_than_or_equals__iterator", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+
+        auto j = i + 3;
+
+        tst::check(j >= i, SL);
+        tst::check(!(i >= j), SL);
+
+        j = i;
+
+        tst::check(i >= j, SL);
+        tst::check(j >= i, SL);
+    });
+
+    suite.add("iterator_operator_less_than_or_equals__iterator", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+
+        auto j = i + 3;
+
+        tst::check(i <= j, SL);
+        tst::check(!(j <= i), SL);
+
+        j = i;
+
+        tst::check(i <= j, SL);
+        tst::check(j <= i, SL);
     });
 });
 }

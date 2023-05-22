@@ -10,11 +10,24 @@
             "group": "build"
         },
         {
+            "label": "build-dbg",
+            "type": "shell",
+            "command": "make config=dbg",
+            "group": "build"
+        },
+        {
             "label": "test_",
             "type": "shell",
             "command": "make test",
             "group": "build",
             "dependsOn": "build"
+        },
+        {
+            "label": "test-dbg",
+            "type": "shell",
+            "command": "make test config=dbg",
+            "group": "build",
+            "dependsOn": "build-dbg"
         }
     ]
 }

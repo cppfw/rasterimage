@@ -32,8 +32,9 @@ public:
         {}
 
     public:
-        // the iterator cannot have stronger tag than std::input_iterator_tag because
-        // it's reference type is value_type
+        // The iterator cannot have stronger tag than std::input_iterator_tag because
+        // it's reference type is value_type. Otherwise, the iterator is actually
+        // a random access iterator.
         using iterator_category = std::input_iterator_tag;
 
         using difference_type = int32_t;
@@ -121,7 +122,31 @@ public:
 
         difference_type operator-(const iterator& i)const noexcept{
             ASSERT(!this->line.empty())
-            return (this->line.data() - i.line.data()) / this->line.size();
+            if(this->line.data() >= i.line.data()){
+                return (this->line.data() - i.line.data()) / this->line.size();
+            }else{
+                return -((i.line.data() - this->line.data()) / this->line.size());
+            }
+        }
+
+        utki::span<pixel_type> operator[](difference_type d)const noexcept{
+            return *(*this + d);
+        }
+
+        bool operator<(const iterator& i)const noexcept{
+            return this->line.data() < i.line.data();
+        }
+
+        bool operator>(const iterator& i)const noexcept{
+            return this->line.data() > i.line.data();
+        }
+
+        bool operator>=(const iterator& i)const noexcept{
+            return this->line.data() >= i.line.data();
+        }
+
+        bool operator<=(const iterator& i)const noexcept{
+            return this->line.data() <= i.line.data();
         }
     };
 
@@ -131,7 +156,7 @@ public:
         dimensions(dimensions),
         buffer(this->dimensions.x() * this->dimensions.y())
     {
-        
+        ASSERT(!this->buffer.empty())
     }
 
     const decltype(dimensions)& dims()const noexcept{

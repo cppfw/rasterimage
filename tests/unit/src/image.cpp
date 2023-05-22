@@ -42,7 +42,7 @@ tst::set set("image", [](tst::suite& suite){
         i += 3;
 
         ++j;
-        ++j;
+        j++;
         ++j;
 
         tst::check(i == j, SL);
@@ -50,7 +50,27 @@ tst::set set("image", [](tst::suite& suite){
         i += -2;
 
         --j;
-        --j;
+        j--;
+
+        tst::check(i == j, SL);
+    });
+
+    suite.add("iterator_minus_equals__difference_type", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+        auto j = i;
+
+        i += 3;
+
+        i -= 3;
+
+        tst::check(i == j, SL);
+
+        i += -2;
+
+        i -= -2;
 
         tst::check(i == j, SL);
     });

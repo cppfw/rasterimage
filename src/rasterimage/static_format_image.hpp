@@ -31,7 +31,10 @@ public:
         {}
 
     public:
+        // the iterator cannot have stronger tag than std::input_iterator_tag because
+        // it's reference type is value_type
         using iterator_category = std::input_iterator_tag;
+
         using difference_type = int32_t;
         using value_type = decltype(line);
         using reference = value_type;
@@ -79,6 +82,13 @@ public:
             return ret;
         }
 
+        // postfix decrement
+        iterator operator--(int)noexcept{
+            iterator ret(*this);
+            this->operator--();
+            return ret;
+        }
+
         iterator& operator+=(difference_type d)noexcept{
             this->line = utki::make_span(
                 this->line.data() + d * this->line.size(),
@@ -86,6 +96,10 @@ public:
             );
 
             return *this;
+        }
+
+        iterator& operator-=(difference_type d)noexcept{
+            return this->operator+=(-d);
         }
     };
 

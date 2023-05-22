@@ -32,7 +32,7 @@ tst::set set("image", [](tst::suite& suite){
         }
     });
 
-    suite.add("iterator_plus_equals__difference_type", [](){
+    suite.add("iterator_operator_plus_equals__difference_type", [](){
         rasterimage::static_format_image<uint8_t, 4> im({100, 200});
         im.clear({10, 20, 30, 40});
 
@@ -55,7 +55,7 @@ tst::set set("image", [](tst::suite& suite){
         tst::check(i == j, SL);
     });
 
-    suite.add("iterator_minus_equals__difference_type", [](){
+    suite.add("iterator_operator_minus_equals__difference_type", [](){
         rasterimage::static_format_image<uint8_t, 4> im({100, 200});
         im.clear({10, 20, 30, 40});
 
@@ -75,7 +75,7 @@ tst::set set("image", [](tst::suite& suite){
         tst::check(i == j, SL);
     });
 
-    suite.add("iterator_plus__difference_type", [](){
+    suite.add("iterator_operator_plus__difference_type", [](){
         rasterimage::static_format_image<uint8_t, 4> im({100, 200});
         im.clear({10, 20, 30, 40});
 
@@ -98,7 +98,7 @@ tst::set set("image", [](tst::suite& suite){
         tst::check(i == j, SL);
     });
 
-    suite.add("operator_difference_type_plus_iterator", [](){
+    suite.add("iterator_operator_difference_type_plus_iterator", [](){
         rasterimage::static_format_image<uint8_t, 4> im({100, 200});
         im.clear({10, 20, 30, 40});
 
@@ -121,7 +121,7 @@ tst::set set("image", [](tst::suite& suite){
         tst::check(i == j, SL);
     });
 
-    suite.add("iterator_minus__difference_type", [](){
+    suite.add("iterator_operator_minus__difference_type", [](){
         rasterimage::static_format_image<uint8_t, 4> im({100, 200});
         im.clear({10, 20, 30, 40});
 
@@ -226,6 +226,19 @@ tst::set set("image", [](tst::suite& suite){
 
         tst::check(i <= j, SL);
         tst::check(j <= i, SL);
+    });
+
+    suite.add("image_operator_square_brackets__size_t", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        decltype(im)::pixel_type expected = {0, 1, 2, 3};
+
+        im[3][10] = expected;
+
+        auto i = im.begin();
+
+        tst::check_eq(i[3][10], expected, SL);
     });
 });
 }

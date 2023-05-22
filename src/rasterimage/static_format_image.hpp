@@ -185,6 +185,10 @@ public:
     utki::span<pixel_type> pixels()noexcept{
         return this->buffer;
     }
+
+    utki::span<pixel_type> operator[](size_t line_index)noexcept{
+        return *utki::next(this->begin(), line_index);
+    }
 };
 
 }

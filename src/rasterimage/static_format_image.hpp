@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utki/debug.hpp>
 #include <utki/span.hpp>
 #include <r4/vector.hpp>
 
@@ -100,6 +101,27 @@ public:
 
         iterator& operator-=(difference_type d)noexcept{
             return this->operator+=(-d);
+        }
+
+        iterator operator+(difference_type d)const noexcept{
+            iterator ret = *this;
+            ret += d;
+            return ret;
+        }
+
+        friend iterator operator+(difference_type d, const iterator& i)noexcept{
+            return i + d;
+        }
+
+        iterator operator-(difference_type d)const noexcept{
+            iterator ret = *this;
+            ret -= d;
+            return ret;
+        }
+
+        difference_type operator-(const iterator& i)const noexcept{
+            ASSERT(!this->line.empty())
+            return (this->line.data() - i.line.data()) / this->line.size();
         }
     };
 

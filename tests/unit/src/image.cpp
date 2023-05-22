@@ -74,5 +74,75 @@ tst::set set("image", [](tst::suite& suite){
 
         tst::check(i == j, SL);
     });
+
+    suite.add("iterator_plus__difference_type", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+        auto j = i;
+
+        i = i + 3;
+
+        ++j;
+        j++;
+        ++j;
+
+        tst::check(i == j, SL);
+
+        i = i + (-2);
+
+        --j;
+        j--;
+
+        tst::check(i == j, SL);
+    });
+
+    suite.add("operator_difference_type_plus_iterator", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+        auto j = i;
+
+        i = 3 + i;
+
+        ++j;
+        j++;
+        ++j;
+
+        tst::check(i == j, SL);
+
+        i = -2 + i;
+
+        --j;
+        j--;
+
+        tst::check(i == j, SL);
+    });
+
+    suite.add("iterator_minus__difference_type", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        im.clear({10, 20, 30, 40});
+
+        auto i = im.begin();
+        auto j = i;
+
+        i += 3;
+
+        i = i - 3;
+
+        tst::check(i == j, SL);
+
+        i += -2;
+
+        i = i - (-2);
+
+        tst::check(i == j, SL);
+    });
+
+    suite.add("iterator_operator_minus__iterator", [](){
+        // TODO:
+    });
 });
 }

@@ -40,6 +40,7 @@ public:
         using difference_type = int32_t;
         using value_type = decltype(line);
         using reference = value_type;
+        using pointer = void;
 
         iterator() = default;
 
@@ -186,7 +187,7 @@ public:
         return this->buffer;
     }
 
-    utki::span<pixel_type> operator[](size_t line_index)noexcept{
+    utki::span<pixel_type> operator[](uint32_t line_index)noexcept{
         return *utki::next(this->begin(), line_index);
     }
 };

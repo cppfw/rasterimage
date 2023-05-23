@@ -240,5 +240,22 @@ tst::set set("image", [](tst::suite& suite){
 
         tst::check_eq(i[3][10], expected, SL);
     });
+
+    suite.add("image_cbegin_cend", [](){
+        rasterimage::static_format_image<uint8_t, 4> im({100, 200});
+        decltype(im)::pixel_type expected = {10, 20, 30, 40};
+        im.clear(expected);
+
+        const auto& cim = im;
+        
+        auto b = cim.cbegin();
+        auto e = cim.cend();
+
+        tst::check_eq(b[0][0], expected, SL);
+
+        b += cim.dims().y();
+
+        tst::check(b == e, SL);
+    });
 });
 }

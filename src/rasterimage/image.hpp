@@ -25,7 +25,9 @@ class image{
     > imvar;
 public:
 
-    unsigned num_channels()const noexcept;
+    unsigned num_channels()const noexcept{
+        return this->imvar.index() % 4 + 1;
+    }
 };
 
 }

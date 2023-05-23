@@ -28,6 +28,12 @@
             "command": "make test config=dbg",
             "group": "build",
             "dependsOn": "build-dbg"
+        },
+        {
+            "label": "clean-all",
+            "type": "shell",
+            "command": "make clean-all",
+            "group": "build"
         }
     ]
 }

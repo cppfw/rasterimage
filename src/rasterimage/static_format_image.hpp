@@ -4,6 +4,7 @@
 #include <utki/span.hpp>
 #include <r4/vector.hpp>
 
+// TODO: doxygen
 namespace rasterimage{
 
 class dimensioned{
@@ -32,14 +33,19 @@ public:
 
 private:
     std::vector<pixel_type> buffer;
-public:
 
-    class iterator{
+    template <bool is_const>
+    class iterator_internal{
         friend class static_format_image;
 
-        utki::span<pixel_type> line;
+    public:
+        using const_value_type = utki::span<const pixel_type>;
+    private:
+        using non_const_value_type = utki::span<pixel_type>;
 
-        iterator(utki::span<pixel_type> line) :
+        std::conditional_t<is_const, const_value_type, non_const_value_type> line;
+
+        iterator_internal(decltype(line) line) :
             line(line)
         {}
 
@@ -54,57 +60,57 @@ public:
         using reference = value_type;
         using pointer = void;
 
-        iterator() = default;
+        iterator_internal() = default;
 
-        bool operator!=(const iterator& i)const noexcept{
+        bool operator!=(const iterator_internal& i)const noexcept{
             return this->line.data() != i.line.data();
         }
 
-        bool operator==(const iterator& i)const noexcept{
+        bool operator==(const iterator_internal& i)const noexcept{
             return this->line.data() == i.line.data();
         }
 
-        utki::span<pixel_type> operator*()noexcept{
+        value_type operator*()noexcept{
             return this->line;
         }
 
-        utki::span<const pixel_type> operator*()const noexcept{
+        const_value_type operator*()const noexcept{
             return this->line;
         }
 
-        utki::span<pixel_type>* operator->()noexcept{
+        const value_type* operator->()noexcept{
             return &this->line;
         }
 
-        const utki::span<const pixel_type>* operator->()const noexcept{
+        const const_value_type* operator->()const noexcept{
             return &this->line;
         }
 
-        iterator& operator++()noexcept{
+        iterator_internal& operator++()noexcept{
             this->line = utki::make_span(this->line.data() + this->line.size(), this->line.size());
             return *this;
         }
 
-        iterator& operator--()noexcept{
+        iterator_internal& operator--()noexcept{
             this->line = utki::make_span(this->line.data() - this->line.size(), this->line.size());
             return *this;
         }
 
         // postfix increment
-        iterator operator++(int)noexcept{
-            iterator ret(*this);
+        iterator_internal operator++(int)noexcept{
+            iterator_internal ret(*this);
             this->operator++();
             return ret;
         }
 
         // postfix decrement
-        iterator operator--(int)noexcept{
-            iterator ret(*this);
+        iterator_internal operator--(int)noexcept{
+            iterator_internal ret(*this);
             this->operator--();
             return ret;
         }
 
-        iterator& operator+=(difference_type d)noexcept{
+        iterator_internal& operator+=(difference_type d)noexcept{
             this->line = utki::make_span(
                 this->line.data() + d * this->line.size(),
                 this->line.size()
@@ -113,27 +119,27 @@ public:
             return *this;
         }
 
-        iterator& operator-=(difference_type d)noexcept{
+        iterator_internal& operator-=(difference_type d)noexcept{
             return this->operator+=(-d);
         }
 
-        iterator operator+(difference_type d)const noexcept{
-            iterator ret = *this;
+        iterator_internal operator+(difference_type d)const noexcept{
+            iterator_internal ret = *this;
             ret += d;
             return ret;
         }
 
-        friend iterator operator+(difference_type d, const iterator& i)noexcept{
+        friend iterator_internal operator+(difference_type d, const iterator_internal& i)noexcept{
             return i + d;
         }
 
-        iterator operator-(difference_type d)const noexcept{
-            iterator ret = *this;
+        iterator_internal operator-(difference_type d)const noexcept{
+            iterator_internal ret = *this;
             ret -= d;
             return ret;
         }
 
-        difference_type operator-(const iterator& i)const noexcept{
+        difference_type operator-(const iterator_internal& i)const noexcept{
             ASSERT(!this->line.empty())
             if(this->line.data() >= i.line.data()){
                 return (this->line.data() - i.line.data()) / this->line.size();
@@ -142,26 +148,36 @@ public:
             }
         }
 
-        utki::span<pixel_type> operator[](difference_type d)const noexcept{
+        value_type operator[](difference_type d)noexcept{
             return *(*this + d);
         }
 
-        bool operator<(const iterator& i)const noexcept{
+        const_value_type operator[](difference_type d)const noexcept{
+            return *(*this + d);
+        }
+
+        bool operator<(const iterator_internal& i)const noexcept{
             return this->line.data() < i.line.data();
         }
 
-        bool operator>(const iterator& i)const noexcept{
+        bool operator>(const iterator_internal& i)const noexcept{
             return this->line.data() > i.line.data();
         }
 
-        bool operator>=(const iterator& i)const noexcept{
+        bool operator>=(const iterator_internal& i)const noexcept{
             return this->line.data() >= i.line.data();
         }
 
-        bool operator<=(const iterator& i)const noexcept{
+        bool operator<=(const iterator_internal& i)const noexcept{
             return this->line.data() <= i.line.data();
         }
     };
+
+public:
+    using iterator = iterator_internal<false>;
+    using const_iterator = iterator_internal<true>;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
     static_format_image() = default;
 
@@ -183,6 +199,37 @@ public:
         ));
     }
 
+    const_iterator cbegin()const noexcept{
+        return const_iterator(utki::make_span(this->buffer.data(), this->dimensions.x()));
+    }
+
+    const_iterator cend()const noexcept{
+        return const_iterator(utki::make_span(
+            this->buffer.data() + this->dimensions.x() * this->dimensions.y(),
+            0
+        ));
+    }
+
+    const_reverse_iterator crbegin() const
+	{
+		return const_reverse_iterator(this->cend());
+	}
+
+	const_reverse_iterator crend() const
+	{
+		return const_reverse_iterator(this->cbegin());
+	}
+
+	reverse_iterator rbegin()
+	{
+		return reverse_iterator(this->end());
+	}
+
+	reverse_iterator rend()
+	{
+		return reverse_iterator(this->begin());
+	}
+
     void clear(pixel_type val){
         for(auto l : *this){
             for(auto& p : l){
@@ -195,7 +242,15 @@ public:
         return this->buffer;
     }
 
+    utki::span<const pixel_type> pixels()const noexcept{
+        return this->buffer;
+    }
+
     utki::span<pixel_type> operator[](uint32_t line_index)noexcept{
+        return *utki::next(this->begin(), line_index);
+    }
+
+    utki::span<const pixel_type> operator[](uint32_t line_index)const noexcept{
         return *utki::next(this->begin(), line_index);
     }
 };

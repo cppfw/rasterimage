@@ -1,7 +1,11 @@
 #pragma once
 
+#include <type_traits>
+#include <cstdint>
+
 namespace rasterimage{
 
+// TODO: doxygen
 template <typename value_type>
 class channel{
     static_assert(

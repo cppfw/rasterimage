@@ -7,6 +7,12 @@
 
 namespace rasterimage{
 
+enum class depth{
+    uint_8_bit,
+    uint_16_bit,
+    floating_point
+};
+
 // TODO: doxygen
 class image{
     std::variant<
@@ -24,6 +30,8 @@ class image{
         static_format_image<channel<float>, 4>
     > imvar;
 public:
+
+    image(depth channel_depth, unsigned num_chans);
 
     unsigned num_channels()const noexcept{
         return this->imvar.index() % 4 + 1;

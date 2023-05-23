@@ -163,6 +163,8 @@ private:
 public:
     using iterator = iterator_internal<false>;
     using const_iterator = iterator_internal<true>;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
     static_format_image() = default;
 
@@ -199,6 +201,26 @@ public:
         ));
     }
 
+    const_reverse_iterator crbegin() const
+	{
+		return const_reverse_iterator(this->cend());
+	}
+
+	const_reverse_iterator crend() const
+	{
+		return const_reverse_iterator(this->cbegin());
+	}
+
+	reverse_iterator rbegin()
+	{
+		return reverse_iterator(this->end());
+	}
+
+	reverse_iterator rend()
+	{
+		return reverse_iterator(this->begin());
+	}
+
     void clear(pixel_type val){
         for(auto l : *this){
             for(auto& p : l){
@@ -211,7 +233,15 @@ public:
         return this->buffer;
     }
 
+    utki::span<const pixel_type> pixels()const noexcept{
+        return this->buffer;
+    }
+
     utki::span<pixel_type> operator[](uint32_t line_index)noexcept{
+        return *utki::next(this->begin(), line_index);
+    }
+
+    utki::span<const pixel_type> operator[](uint32_t line_index)const noexcept{
         return *utki::next(this->begin(), line_index);
     }
 };

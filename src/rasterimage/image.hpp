@@ -13,6 +13,13 @@ enum class depth{
     floating_point
 };
 
+enum class pixel_format{
+    alpha,
+    luminance_alpha,
+    rgb,
+    rgba
+};
+
 // TODO: doxygen
 class image{
     std::variant<
@@ -31,11 +38,17 @@ class image{
     > imvar;
 public:
 
-    image(depth channel_depth, unsigned num_chans);
+    image(
+        const r4::vector2<uint32_t>& dimensions = {0, 0},
+        pixel_format pf = pixel_format::rgba,
+        depth channel_depth = depth::uint_8_bit
+    );
 
     unsigned num_channels()const noexcept{
         return this->imvar.index() % 4 + 1;
     }
+
+    const r4::vector2<uint32_t>& dims()const noexcept;
 };
 
 }

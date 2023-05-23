@@ -7,6 +7,7 @@
 
 namespace rasterimage{
 
+// TODO: doxygen
 class image{
     std::variant<
         static_format_image<channel<uint8_t>, 1>,

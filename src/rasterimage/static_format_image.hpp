@@ -6,6 +6,7 @@
 
 namespace rasterimage{
 
+// TODO: doxygen
 template <typename channel_type, size_t num_channels>
 class static_format_image{
     r4::vector2<uint32_t> dimensions{0, 0};

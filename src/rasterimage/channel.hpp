@@ -2,6 +2,7 @@
 
 namespace rasterimage{
 
+// TODO: doxygen
 template <typename value_type>
 class channel{
     static_assert(

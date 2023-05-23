@@ -6,9 +6,21 @@
 
 namespace rasterimage{
 
-template <typename channel_type, size_t num_channels>
-class static_format_image{
+class dimensioned{
+protected:
     r4::vector2<uint32_t> dimensions{0, 0};
+public:
+    dimensioned(r4::vector2<uint32_t> dimensions):
+        dimensions(dimensions)
+    {}
+    
+    const decltype(dimensions)& dims()const noexcept{
+        return this->dimensions;
+    }
+};
+
+template <typename channel_type, size_t num_channels>
+class static_format_image : public dimensioned{
 public:
     using pixel_type =
         std::enable_if_t<1 <= num_channels || num_channels <= 4, 
@@ -154,14 +166,10 @@ public:
     static_format_image() = default;
 
     static_format_image(r4::vector2<uint32_t> dimensions):
-        dimensions(dimensions),
+        dimensioned(dimensions),
         buffer(this->dimensions.x() * this->dimensions.y())
     {
         ASSERT(!this->buffer.empty())
-    }
-
-    const decltype(dimensions)& dims()const noexcept{
-        return this->dimensions;
     }
 
     iterator begin()noexcept{

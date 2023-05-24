@@ -54,10 +54,22 @@ public:
     );
 
     size_t num_channels()const noexcept{
-        return this->variant.index() % 4 + 1;
+        auto ret = size_t(this->get_format()) + 1;
+        ASSERT(std::visit([](const auto& sfi){return sfi.num_channels;}, this->variant) == ret)
+        return ret;
     }
 
-    const r4::vector2<uint32_t>& dims()const noexcept;
+    format get_format()const noexcept{
+        auto ret = format(this->variant.index() % size_t(format::enum_size));
+        ASSERT(format(std::visit([](const auto& sfi){return sfi.num_channels - 1;}, this->variant)) == ret)
+        return ret;
+    }
+
+    depth get_depth()const noexcept{
+        return depth(this->variant.index() / size_t(format::enum_size));
+    }
+
+    const dimensioned::dimensions_type& dims()const noexcept;
 };
 
 }

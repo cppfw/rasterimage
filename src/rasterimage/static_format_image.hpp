@@ -8,28 +8,26 @@
 namespace rasterimage{
 
 class dimensioned{
-protected:
-    r4::vector2<uint32_t> dimensions{0, 0};
 public:
-    dimensioned(r4::vector2<uint32_t> dimensions):
+    using dimensions_type = r4::vector2<uint32_t>;
+protected:
+    dimensions_type dimensions;
+public:
+    dimensioned(dimensions_type dimensions):
         dimensions(dimensions)
     {}
     
-    const decltype(dimensions)& dims()const noexcept{
+    const dimensions_type& dims()const noexcept{
         return this->dimensions;
     }
 };
 
-template <typename channel_type, size_t num_channels>
+template <typename channel_type, size_t number_of_channels>
 class static_format_image : public dimensioned{
 public:
-    using pixel_type =
-        std::enable_if_t<1 <= num_channels || num_channels <= 4, 
-            std::conditional_t<num_channels == 1,
-                channel_type,
-                r4::vector<channel_type, num_channels>   
-            >
-        >;
+    static const size_t num_channels = number_of_channels;
+
+    using pixel_type = r4::vector<channel_type, num_channels>;
 
 private:
     std::vector<pixel_type> buffer;
@@ -179,7 +177,7 @@ public:
     using reverse_iterator = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-    static_format_image(r4::vector2<uint32_t> dimensions = {0, 0}):
+    static_format_image(dimensions_type dimensions = {0, 0}):
         dimensioned(dimensions),
         buffer(this->dimensions.x() * this->dimensions.y())
     {

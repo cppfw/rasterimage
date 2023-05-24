@@ -36,3 +36,7 @@ image::image(
         return factories_array[i](dimensions);
     }())
 {}
+
+const dimensioned::dimensions_type& image::dims()const noexcept{
+    return std::visit([&](const dimensioned& sfi) -> const auto& {return sfi.dims();}, this->variant);
+}

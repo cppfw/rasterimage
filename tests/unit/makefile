@@ -18,6 +18,8 @@ $(eval $(prorab-build-app))
 $(eval $(call prorab-depend, $(prorab_this_name), $(this_lib_raster_image)))
 
 this_test_cmd := $(prorab_this_name)
-this_test_deps := $(prorab_space)
+this_test_deps := $(prorab_this_name)
 this_test_ld_path := ../../src/out/$(c)
 $(eval $(prorab-test))
+
+$(eval $(call prorab-include, ../../src/makefile))

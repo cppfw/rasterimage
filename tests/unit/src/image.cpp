@@ -28,6 +28,30 @@ tst::set set("image", [](tst::suite& suite){
         };
 
         tst::check_eq(im.num_channels(), std::get<size_t>(p), SL);
+        tst::check(im.get_format() == std::get<rasterimage::format>(p), SL);
+        tst::check(im.get_depth() == std::get<rasterimage::depth>(p), SL);
+
+        rasterimage::image empty_im{
+            {0, 0},
+            std::get<rasterimage::format>(p),
+            std::get<rasterimage::depth>(p)
+        };
+
+        tst::check_eq(empty_im.num_channels(), std::get<size_t>(p), SL);
+        tst::check(empty_im.get_format() == std::get<rasterimage::format>(p), SL);
+        tst::check(empty_im.get_depth() == std::get<rasterimage::depth>(p), SL);
+    });
+
+    suite.add("image_dims", [](){
+        rasterimage::dimensioned::dimensions_type expected = {13, 20};
+
+        for(auto d = 0; d != size_t(rasterimage::depth::enum_size); ++d){
+            for(auto f = 0; f != size_t(rasterimage::format::enum_size); ++f){
+                rasterimage::image im{expected, rasterimage::format(f), rasterimage::depth(d)};
+
+                tst::check_eq(im.dims(), expected, SL);
+            }
+        }
     });
 });
 }

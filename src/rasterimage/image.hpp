@@ -10,19 +10,24 @@ namespace rasterimage{
 enum class depth{
     uint_8_bit,
     uint_16_bit,
-    floating_point
+    floating_point,
+
+    enum_size
 };
 
-enum class pixel_format{
-    alpha,
-    luminance_alpha,
+enum class format{
+    grey,
+    greya,
     rgb,
-    rgba
+    rgba,
+
+    enum_size
 };
 
 // TODO: doxygen
 class image{
-    std::variant<
+public:
+    using variant_type = std::variant<
         static_format_image<channel<uint8_t>, 1>,
         static_format_image<channel<uint8_t>, 2>,
         static_format_image<channel<uint8_t>, 3>,
@@ -35,17 +40,21 @@ class image{
         static_format_image<channel<float>, 2>,
         static_format_image<channel<float>, 3>,
         static_format_image<channel<float>, 4>
-    > imvar;
+    >;
+private:
+    variant_type variant;
+
+    static size_t to_variant_index(format pixel_format, depth channel_depth);
 public:
 
     image(
         const r4::vector2<uint32_t>& dimensions = {0, 0},
-        pixel_format pf = pixel_format::rgba,
+        format pixel_format = format::rgba,
         depth channel_depth = depth::uint_8_bit
     );
 
     unsigned num_channels()const noexcept{
-        return this->imvar.index() % 4 + 1;
+        return this->variant.index() % 4 + 1;
     }
 
     const r4::vector2<uint32_t>& dims()const noexcept;

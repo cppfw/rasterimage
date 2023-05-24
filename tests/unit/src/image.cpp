@@ -6,7 +6,7 @@
 namespace{
 tst::set set("image", [](tst::suite& suite){
     suite.add("image_num_channels", [](){
-        // TODO:
+        rasterimage::image im;
     });
 });
 }

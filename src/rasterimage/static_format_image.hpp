@@ -179,13 +179,11 @@ public:
     using reverse_iterator = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-    static_format_image() = default;
-
-    static_format_image(r4::vector2<uint32_t> dimensions):
+    static_format_image(r4::vector2<uint32_t> dimensions = {0, 0}):
         dimensioned(dimensions),
         buffer(this->dimensions.x() * this->dimensions.y())
     {
-        ASSERT(!this->buffer.empty())
+        ASSERT(!this->buffer.empty() || (this->dimensions.x() == 0 && !this->buffer.data()))
     }
 
     iterator begin()noexcept{

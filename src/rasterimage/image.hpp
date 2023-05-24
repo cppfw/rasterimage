@@ -53,7 +53,7 @@ public:
         depth channel_depth = depth::uint_8_bit
     );
 
-    unsigned num_channels()const noexcept{
+    size_t num_channels()const noexcept{
         return this->variant.index() % 4 + 1;
     }
 

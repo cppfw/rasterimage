@@ -18,7 +18,9 @@ make_factories_array(std::index_sequence<index...>)
 }
 
 size_t image::to_variant_index(format pixel_format, depth channel_depth){
-    return size_t(channel_depth) * size_t(format::enum_size) + size_t(pixel_format);
+    auto ret = size_t(channel_depth) * size_t(format::enum_size) + size_t(pixel_format);
+    ASSERT(ret < std::variant_size_v<image::variant_type>)
+    return ret;
 }
 
 image::image(
@@ -32,36 +34,5 @@ image::image(
         auto i = to_variant_index(pixel_format, channel_depth);
 
         return factories_array[i](dimensions);
-
-        // TODO: remove
-        // switch(to_imvar_index(pixel_format, channel_depth)){
-        //     default:
-        //     case 0:
-        //         return decltype(imvar)(std::in_place_index<0>, dimensions);
-        //     case 1:
-        //         return decltype(imvar)(std::in_place_index<1>, dimensions);
-        //     case 2:
-        //         return decltype(imvar)(std::in_place_index<2>, dimensions);
-        //     case 3:
-        //         return decltype(imvar)(std::in_place_index<3>, dimensions);
-        //     case 4:
-        //         return decltype(imvar)(std::in_place_index<4>, dimensions);
-        //     case 5:
-        //         return decltype(imvar)(std::in_place_index<5>, dimensions);
-        //     case 6:
-        //         return decltype(imvar)(std::in_place_index<6>, dimensions);
-        //     case 7:
-        //         return decltype(imvar)(std::in_place_index<7>, dimensions);
-        //     case 8:
-        //         return decltype(imvar)(std::in_place_index<8>, dimensions);
-        //     case 9:
-        //         return decltype(imvar)(std::in_place_index<9>, dimensions);
-        //     case 10:
-        //         return decltype(imvar)(std::in_place_index<10>, dimensions);
-        //     case 11:
-        //         return decltype(imvar)(std::in_place_index<11>, dimensions);
-        // }
     }())
-{
-    // TODO:
-}
+{}

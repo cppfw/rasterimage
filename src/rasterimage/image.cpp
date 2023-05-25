@@ -2,49 +2,50 @@
 
 using namespace rasterimage;
 
-using factory_type = std::add_pointer_t<image::variant_type(
-    const r4::vector2<uint32_t> &dimensions)>;
+using factory_type = std::add_pointer_t<image::variant_type(const r4::vector2<uint32_t>& dimensions)>;
 
 // creates std::array of factory functions which construct image::variant_type
 // initialized to alternative index same as factory's index in the array
 template <size_t... index>
-std::array<factory_type, sizeof...(index)>
-make_factories_array(std::index_sequence<index...>) {
-  return {[](const r4::vector2<uint32_t> &dimensions) {
-    return image::variant_type(std::in_place_index<index>, dimensions);
-  }...};
+std::array<factory_type, sizeof...(index)> make_factories_array(std::index_sequence<index...>)
+{
+	return {[](const r4::vector2<uint32_t>& dimensions) {
+		return image::variant_type(std::in_place_index<index>, dimensions);
+	}...};
 }
 
-size_t image::to_variant_index(components pixel_components,
-                               depth channel_depth) {
-  auto ret = size_t(channel_depth) * size_t(components::enum_size) +
-             size_t(pixel_components);
-  ASSERT(ret < std::variant_size_v<image::variant_type>)
-  return ret;
+size_t image::to_variant_index(components pixel_components, depth channel_depth)
+{
+	auto ret = size_t(channel_depth) * size_t(components::enum_size) + size_t(pixel_components);
+	ASSERT(ret < std::variant_size_v<image::variant_type>)
+	return ret;
 }
 
-image::image(const r4::vector2<uint32_t> &dimensions,
-             components pixel_components, depth channel_depth)
-    : variant([&]() {
-        const auto factories_array =
-            make_factories_array(std::make_index_sequence<
-                                 std::variant_size_v<image::variant_type>>());
+image::image(const r4::vector2<uint32_t>& dimensions, components pixel_components, depth channel_depth) :
+	variant([&]() {
+		const auto factories_array =
+			make_factories_array(std::make_index_sequence<std::variant_size_v<image::variant_type>>());
 
-        auto i = to_variant_index(pixel_components, channel_depth);
+		auto i = to_variant_index(pixel_components, channel_depth);
 
-        return factories_array[i](dimensions);
-      }()) {}
+		return factories_array[i](dimensions);
+	}())
+{}
 
-const dimensioned::dimensions_type &image::dims() const noexcept {
-  try {
-    ASSERT(!this->variant.valueless_by_exception())
-    return std::visit(
-        [&](const dimensioned &sfi) -> const auto & { return sfi.dims(); },
-        this->variant);
-  } catch (std::bad_variant_access &e) {
-    // this->variant must never be valueless_by_exeception,
-    // so should never reach here
-    ASSERT(false)
-    abort();
-  }
+const dimensioned::dimensions_type& image::dims() const noexcept
+{
+	try {
+		ASSERT(!this->variant.valueless_by_exception())
+		return std::visit(
+			[&](const dimensioned& sfi) -> const auto& {
+				return sfi.dims();
+			},
+			this->variant
+		);
+	} catch (std::bad_variant_access& e) {
+		// this->variant must never be valueless_by_exeception,
+		// so should never reach here
+		ASSERT(false)
+		abort();
+	}
 }

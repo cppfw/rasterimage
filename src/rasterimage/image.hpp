@@ -1,116 +1,280 @@
 #pragma once
 
-#include <variant>
-
-#include "static_format_image.hpp"
-
-namespace rasterimage {
-
-enum class depth {
-	uint_8_bit,
-	uint_16_bit,
-	floating_point,
-
-	enum_size
-};
-
-template <depth depth_enum>
-using depth_type_t = std::conditional_t<
-	depth_enum == depth::uint_8_bit,
-	uint8_t,
-	std::conditional_t<depth_enum == depth::uint_16_bit, uint16_t, float>>;
-
-enum class components {
-	grey,
-	greya,
-	rgb,
-	rgba,
-
-	enum_size
-};
-
-inline constexpr size_t to_num_channels(components f)
-{
-	return size_t(f) + 1;
-}
+#include <r4/vector.hpp>
+#include <utki/debug.hpp>
+#include <utki/span.hpp>
 
 // TODO: doxygen
-class image
+namespace rasterimage {
+
+class dimensioned
 {
 public:
-	using variant_type = std::variant<
-		static_format_image<uint8_t, 1>,
-		static_format_image<uint8_t, 2>,
-		static_format_image<uint8_t, 3>,
-		static_format_image<uint8_t, 4>,
-		static_format_image<uint16_t, 1>,
-		static_format_image<uint16_t, 2>,
-		static_format_image<uint16_t, 3>,
-		static_format_image<uint16_t, 4>,
-		static_format_image<float, 1>,
-		static_format_image<float, 2>,
-		static_format_image<float, 3>,
-		static_format_image<float, 4>>;
+	using dimensions_type = r4::vector2<uint32_t>;
 
-private:
-	variant_type variant;
-
-	static size_t to_variant_index(components pixel_components, depth channel_depth);
+protected:
+	dimensions_type dimensions;
 
 public:
-	image(
-		const r4::vector2<uint32_t>& dimensions = {0, 0},
-		components pixel_components = components::rgba,
-		depth channel_depth = depth::uint_8_bit
-	);
+	dimensioned(dimensions_type dimensions) :
+		dimensions(dimensions)
+	{}
 
-	size_t num_channels() const noexcept
+	const dimensions_type& dims() const noexcept
 	{
-		auto ret = size_t(this->get_components()) + 1;
-		ASSERT(
-			std::visit(
-				[](const auto& sfi) {
-					return sfi.num_channels;
-				},
-				this->variant
-			)
-			== ret
-		)
-		return ret;
+		return this->dimensions;
+	}
+};
+
+template <typename channel_type, size_t number_of_channels>
+class image : public dimensioned
+{
+public:
+	static const size_t num_channels = number_of_channels;
+
+	using pixel_type = r4::vector<channel_type, num_channels>;
+
+private:
+	std::vector<pixel_type> buffer;
+
+	template <bool is_const>
+	class iterator_internal
+	{
+		friend class image;
+
+	public:
+		using const_value_type = utki::span<const pixel_type>;
+
+	private:
+		using non_const_value_type = utki::span<pixel_type>;
+
+		std::conditional_t<is_const, const_value_type, non_const_value_type> line;
+
+		iterator_internal(decltype(line) line) :
+			line(line)
+		{}
+
+	public:
+		// The iterator cannot have stronger tag than std::input_iterator_tag
+		// because it's reference type is value_type. Otherwise, the iterator is
+		// actually a random access iterator.
+		using iterator_category = std::input_iterator_tag;
+
+		using difference_type = std::ptrdiff_t;
+		using value_type = decltype(line);
+		using reference = value_type;
+		using pointer = void;
+
+		iterator_internal() = default;
+
+		bool operator!=(const iterator_internal& i) const noexcept
+		{
+			return this->line.data() != i.line.data();
+		}
+
+		bool operator==(const iterator_internal& i) const noexcept
+		{
+			return this->line.data() == i.line.data();
+		}
+
+		value_type operator*() noexcept
+		{
+			return this->line;
+		}
+
+		const_value_type operator*() const noexcept
+		{
+			return this->line;
+		}
+
+		const value_type* operator->() noexcept
+		{
+			return &this->line;
+		}
+
+		const const_value_type* operator->() const noexcept
+		{
+			return &this->line;
+		}
+
+		iterator_internal& operator++() noexcept
+		{
+			this->line = utki::make_span(this->line.data() + this->line.size(), this->line.size());
+			return *this;
+		}
+
+		iterator_internal& operator--() noexcept
+		{
+			this->line = utki::make_span(this->line.data() - this->line.size(), this->line.size());
+			return *this;
+		}
+
+		// postfix increment
+		iterator_internal operator++(int) noexcept
+		{
+			iterator_internal ret(*this);
+			this->operator++();
+			return ret;
+		}
+
+		// postfix decrement
+		iterator_internal operator--(int) noexcept
+		{
+			iterator_internal ret(*this);
+			this->operator--();
+			return ret;
+		}
+
+		iterator_internal& operator+=(difference_type d) noexcept
+		{
+			this->line = utki::make_span(this->line.data() + d * this->line.size(), this->line.size());
+
+			return *this;
+		}
+
+		iterator_internal& operator-=(difference_type d) noexcept
+		{
+			return this->operator+=(-d);
+		}
+
+		iterator_internal operator+(difference_type d) const noexcept
+		{
+			iterator_internal ret = *this;
+			ret += d;
+			return ret;
+		}
+
+		friend iterator_internal operator+(difference_type d, const iterator_internal& i) noexcept
+		{
+			return i + d;
+		}
+
+		iterator_internal operator-(difference_type d) const noexcept
+		{
+			iterator_internal ret = *this;
+			ret -= d;
+			return ret;
+		}
+
+		difference_type operator-(const iterator_internal& i) const noexcept
+		{
+			ASSERT(!this->line.empty())
+			if (this->line.data() >= i.line.data()) {
+				return (this->line.data() - i.line.data()) / this->line.size();
+			} else {
+				return -((i.line.data() - this->line.data()) / this->line.size());
+			}
+		}
+
+		value_type operator[](difference_type d) noexcept
+		{
+			return *(*this + d);
+		}
+
+		const_value_type operator[](difference_type d) const noexcept
+		{
+			return *(*this + d);
+		}
+
+		bool operator<(const iterator_internal& i) const noexcept
+		{
+			return this->line.data() < i.line.data();
+		}
+
+		bool operator>(const iterator_internal& i) const noexcept
+		{
+			return this->line.data() > i.line.data();
+		}
+
+		bool operator>=(const iterator_internal& i) const noexcept
+		{
+			return this->line.data() >= i.line.data();
+		}
+
+		bool operator<=(const iterator_internal& i) const noexcept
+		{
+			return this->line.data() <= i.line.data();
+		}
+	};
+
+public:
+	using iterator = iterator_internal<false>;
+	using const_iterator = iterator_internal<true>;
+	using reverse_iterator = std::reverse_iterator<iterator>;
+	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+	image(dimensions_type dimensions = {0, 0}) :
+		dimensioned(dimensions),
+		buffer(this->dimensions.x() * this->dimensions.y()){
+			ASSERT(!this->buffer.empty() || (this->dimensions.x() == 0 && !this->buffer.data()))}
+
+		iterator begin() noexcept
+	{
+		return iterator(utki::make_span(this->buffer.data(), this->dimensions.x()));
 	}
 
-	components get_components() const noexcept
+	iterator end() noexcept
 	{
-		auto ret = components(this->variant.index() % size_t(components::enum_size));
-		ASSERT(
-			components(std::visit(
-				[](const auto& sfi) {
-					return sfi.num_channels - 1;
-				},
-				this->variant
-			))
-			== ret
-		)
-		return ret;
+		return iterator(utki::make_span(this->buffer.data() + this->dimensions.x() * this->dimensions.y(), 0));
 	}
 
-	depth get_depth() const noexcept
+	const_iterator cbegin() const noexcept
 	{
-		return depth(this->variant.index() / size_t(components::enum_size));
+		return const_iterator(utki::make_span(this->buffer.data(), this->dimensions.x()));
 	}
 
-	const dimensioned::dimensions_type& dims() const noexcept;
-
-	template <components components_enum, depth depth_enum = depth::uint_8_bit>
-	static_format_image<depth_type_t<depth_enum>, to_num_channels(components_enum)>& get()
+	const_iterator cend() const noexcept
 	{
-		return std::get<static_format_image<depth_type_t<depth_enum>, to_num_channels(components_enum)>>(this->variant);
+		return const_iterator(utki::make_span(this->buffer.data() + this->dimensions.x() * this->dimensions.y(), 0));
 	}
 
-	template <components components_enum, depth depth_enum = depth::uint_8_bit>
-	const static_format_image<depth_type_t<depth_enum>, to_num_channels(components_enum)>& get() const
+	const_reverse_iterator crbegin() const
 	{
-		return std::get<static_format_image<depth_type_t<depth_enum>, to_num_channels(components_enum)>>(this->variant);
+		return const_reverse_iterator(this->cend());
+	}
+
+	const_reverse_iterator crend() const
+	{
+		return const_reverse_iterator(this->cbegin());
+	}
+
+	reverse_iterator rbegin()
+	{
+		return reverse_iterator(this->end());
+	}
+
+	reverse_iterator rend()
+	{
+		return reverse_iterator(this->begin());
+	}
+
+	void clear(pixel_type val)
+	{
+		for (auto l : *this) {
+			for (auto& p : l) {
+				p = val;
+			}
+		}
+	}
+
+	utki::span<pixel_type> pixels() noexcept
+	{
+		return this->buffer;
+	}
+
+	utki::span<const pixel_type> pixels() const noexcept
+	{
+		return this->buffer;
+	}
+
+	utki::span<pixel_type> operator[](uint32_t line_index) noexcept
+	{
+		return *utki::next(this->begin(), line_index);
+	}
+
+	utki::span<const pixel_type> operator[](uint32_t line_index) const noexcept
+	{
+		return *utki::next(this->begin(), line_index);
 	}
 };
 

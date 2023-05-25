@@ -4,55 +4,257 @@
 
 namespace {
 tst::set set("image", [](tst::suite& suite) {
-	suite.add<std::tuple<rasterimage::components, rasterimage::depth, size_t>>(
-		"image_num_channels",
-		{
-			{ rasterimage::components::grey,     rasterimage::depth::uint_8_bit, 1},
-			{rasterimage::components::greya,     rasterimage::depth::uint_8_bit, 2},
-			{  rasterimage::components::rgb,     rasterimage::depth::uint_8_bit, 3},
-			{ rasterimage::components::rgba,     rasterimage::depth::uint_8_bit, 4},
-			{ rasterimage::components::grey,    rasterimage::depth::uint_16_bit, 1},
-			{rasterimage::components::greya,    rasterimage::depth::uint_16_bit, 2},
-			{  rasterimage::components::rgb,    rasterimage::depth::uint_16_bit, 3},
-			{ rasterimage::components::rgba,    rasterimage::depth::uint_16_bit, 4},
-			{ rasterimage::components::grey, rasterimage::depth::floating_point, 1},
-			{rasterimage::components::greya, rasterimage::depth::floating_point, 2},
-			{  rasterimage::components::rgb, rasterimage::depth::floating_point, 3},
-			{ rasterimage::components::rgba, rasterimage::depth::floating_point, 4},
-    },
-		[](const auto& p) {
-			rasterimage::image im{
-				{10, 20},
-				std::get<rasterimage::components>(p),
-				std::get<rasterimage::depth>(p)
-            };
+	suite.add("clear", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
 
-			tst::check_eq(im.num_channels(), std::get<size_t>(p), SL);
-			tst::check(im.get_components() == std::get<rasterimage::components>(p), SL);
-			tst::check(im.get_depth() == std::get<rasterimage::depth>(p), SL);
+		tst::check_eq(im.pixels().size(), size_t(100 * 200), SL);
 
-			rasterimage::image empty_im{
-				{0, 0},
-				std::get<rasterimage::components>(p),
-				std::get<rasterimage::depth>(p)
-            };
+		im.clear({10, 20, 30, 40});
 
-			tst::check_eq(empty_im.num_channels(), std::get<size_t>(p), SL);
-			tst::check(empty_im.get_components() == std::get<rasterimage::components>(p), SL);
-			tst::check(empty_im.get_depth() == std::get<rasterimage::depth>(p), SL);
-		}
-	);
-
-	suite.add("image_dims", []() {
-		rasterimage::dimensioned::dimensions_type expected = {13, 20};
-
-		for (auto d = 0; d != size_t(rasterimage::depth::enum_size); ++d) {
-			for (auto f = 0; f != size_t(rasterimage::components::enum_size); ++f) {
-				rasterimage::image im{expected, rasterimage::components(f), rasterimage::depth(d)};
-
-				tst::check_eq(im.dims(), expected, SL);
+		for (auto l : im) {
+			for (auto& p : l) {
+				tst::check_eq(p.r(), decltype(im)::pixel_type::value_type(10), SL);
+				tst::check_eq(p.g(), decltype(im)::pixel_type::value_type(20), SL);
+				tst::check_eq(p.b(), decltype(im)::pixel_type::value_type(30), SL);
+				tst::check_eq(p.a(), decltype(im)::pixel_type::value_type(40), SL);
 			}
 		}
+
+		for (uint32_t y = 0; y != im.dims().y(); ++y) {
+			for (uint32_t x = 0; x != im.dims().x(); ++x) {
+				const auto& p = im.pixels()[y * im.dims().x() + x];
+				tst::check_eq(p.r(), decltype(im)::pixel_type::value_type(10), SL);
+				tst::check_eq(p.g(), decltype(im)::pixel_type::value_type(20), SL);
+				tst::check_eq(p.b(), decltype(im)::pixel_type::value_type(30), SL);
+				tst::check_eq(p.a(), decltype(im)::pixel_type::value_type(40), SL);
+			}
+		}
+	});
+
+	suite.add("iterator_operator_plus_equals__difference_type", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+		auto j = i;
+
+		i += 3;
+
+		++j;
+		j++;
+		++j;
+
+		tst::check(i == j, SL);
+
+		i += -2;
+
+		--j;
+		j--;
+
+		tst::check(i == j, SL);
+	});
+
+	suite.add("iterator_operator_minus_equals__difference_type", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+		auto j = i;
+
+		i += 3;
+
+		i -= 3;
+
+		tst::check(i == j, SL);
+
+		i += -2;
+
+		i -= -2;
+
+		tst::check(i == j, SL);
+	});
+
+	suite.add("iterator_operator_plus__difference_type", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+		auto j = i;
+
+		i = i + 3;
+
+		++j;
+		j++;
+		++j;
+
+		tst::check(i == j, SL);
+
+		i = i + (-2);
+
+		--j;
+		j--;
+
+		tst::check(i == j, SL);
+	});
+
+	suite.add("iterator_operator_difference_type_plus_iterator", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+		auto j = i;
+
+		i = 3 + i;
+
+		++j;
+		j++;
+		++j;
+
+		tst::check(i == j, SL);
+
+		i = -2 + i;
+
+		--j;
+		j--;
+
+		tst::check(i == j, SL);
+	});
+
+	suite.add("iterator_operator_minus__difference_type", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+		auto j = i;
+
+		i += 3;
+
+		i = i - 3;
+
+		tst::check(i == j, SL);
+
+		i += -2;
+
+		i = i - (-2);
+
+		tst::check(i == j, SL);
+	});
+
+	suite.add("iterator_operator_minus__iterator", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+		auto j = i;
+
+		j += 4;
+
+		tst::check_eq(j - i, decltype(i)::difference_type(4), SL);
+		tst::check_eq(i - j, decltype(i)::difference_type(-4), SL);
+	});
+
+	suite.add("iterator_operator_square_brackets__difference_type", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		decltype(im)::pixel_type expected = {0, 1, 2, 3};
+
+		auto i = im.begin();
+		im.pixels()[im.dims().x() * 2 + 3] = expected;
+
+		tst::check_eq(i[2][3], expected, SL);
+
+		i += 3;
+
+		tst::check_eq(i[-1][3], {0, 1, 2, 3}, SL);
+	});
+
+	suite.add("iterator_operator_less_than__iterator", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+
+		auto j = i + 3;
+
+		tst::check(i < j, SL);
+		tst::check(!(j < i), SL);
+	});
+
+	suite.add("iterator_operator_greater_than__iterator", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+
+		auto j = i + 3;
+
+		tst::check(j > i, SL);
+		tst::check(!(i > j), SL);
+	});
+
+	suite.add("iterator_operator_greater_than_or_equals__iterator", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+
+		auto j = i + 3;
+
+		tst::check(j >= i, SL);
+		tst::check(!(i >= j), SL);
+
+		j = i;
+
+		tst::check(i >= j, SL);
+		tst::check(j >= i, SL);
+	});
+
+	suite.add("iterator_operator_less_than_or_equals__iterator", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		auto i = im.begin();
+
+		auto j = i + 3;
+
+		tst::check(i <= j, SL);
+		tst::check(!(j <= i), SL);
+
+		j = i;
+
+		tst::check(i <= j, SL);
+		tst::check(j <= i, SL);
+	});
+
+	suite.add("image_operator_square_brackets__size_t", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		im.clear({10, 20, 30, 40});
+
+		decltype(im)::pixel_type expected = {0, 1, 2, 3};
+
+		im[3][10] = expected;
+
+		auto i = im.begin();
+
+		tst::check_eq(i[3][10], expected, SL);
+	});
+
+	suite.add("image_cbegin_cend", []() {
+		rasterimage::image<uint8_t, 4> im({100, 200});
+		decltype(im)::pixel_type expected = {10, 20, 30, 40};
+		im.clear(expected);
+
+		const auto& cim = im;
+
+		auto b = cim.cbegin();
+		auto e = cim.cend();
+
+		tst::check_eq(b[0][0], expected, SL);
+
+		b += cim.dims().y();
+
+		tst::check(b == e, SL);
 	});
 });
 } // namespace

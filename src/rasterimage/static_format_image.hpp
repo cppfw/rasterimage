@@ -60,7 +60,7 @@ private:
 		// a random access iterator.
 		using iterator_category = std::input_iterator_tag;
 
-		using difference_type = int64_t;
+		using difference_type = std::ptrdiff_t;
 		using value_type = decltype(line);
 		using reference = value_type;
 		using pointer = void;

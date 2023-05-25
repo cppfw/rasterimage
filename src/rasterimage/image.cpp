@@ -14,19 +14,19 @@ std::array<factory_type, sizeof...(index)> make_factories_array(std::index_seque
 	}...};
 }
 
-size_t image::to_variant_index(format pixel_format, depth channel_depth)
+size_t image::to_variant_index(components pixel_components, depth channel_depth)
 {
-	auto ret = size_t(channel_depth) * size_t(format::enum_size) + size_t(pixel_format);
+	auto ret = size_t(channel_depth) * size_t(components::enum_size) + size_t(pixel_components);
 	ASSERT(ret < std::variant_size_v<image::variant_type>)
 	return ret;
 }
 
-image::image(const r4::vector2<uint32_t>& dimensions, format pixel_format, depth channel_depth) :
+image::image(const r4::vector2<uint32_t>& dimensions, components pixel_components, depth channel_depth) :
 	variant([&]() {
 		const auto factories_array =
 			make_factories_array(std::make_index_sequence<std::variant_size_v<image::variant_type>>());
 
-		auto i = to_variant_index(pixel_format, channel_depth);
+		auto i = to_variant_index(pixel_components, channel_depth);
 
 		return factories_array[i](dimensions);
 	}())

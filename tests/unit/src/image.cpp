@@ -1,57 +1,58 @@
+#include <rasterimage/image.hpp>
 #include <tst/check.hpp>
 #include <tst/set.hpp>
 
-#include <rasterimage/image.hpp>
-
-namespace{
-tst::set set("image", [](tst::suite& suite){
-    suite.add<std::tuple<rasterimage::format, rasterimage::depth, size_t>>("image_num_channels",
-    {
-        {rasterimage::format::grey, rasterimage::depth::uint_8_bit, 1},
-        {rasterimage::format::greya, rasterimage::depth::uint_8_bit, 2},
-        {rasterimage::format::rgb, rasterimage::depth::uint_8_bit, 3},
-        {rasterimage::format::rgba, rasterimage::depth::uint_8_bit, 4},
-        {rasterimage::format::grey, rasterimage::depth::uint_16_bit, 1},
-        {rasterimage::format::greya, rasterimage::depth::uint_16_bit, 2},
-        {rasterimage::format::rgb, rasterimage::depth::uint_16_bit, 3},
-        {rasterimage::format::rgba, rasterimage::depth::uint_16_bit, 4},
-        {rasterimage::format::grey, rasterimage::depth::floating_point, 1},
-        {rasterimage::format::greya, rasterimage::depth::floating_point, 2},
-        {rasterimage::format::rgb, rasterimage::depth::floating_point, 3},
-        {rasterimage::format::rgba, rasterimage::depth::floating_point, 4},
+namespace {
+tst::set set("image", [](tst::suite& suite) {
+	suite.add<std::tuple<rasterimage::format, rasterimage::depth, size_t>>(
+		"image_num_channels",
+		{
+			{ rasterimage::format::grey,     rasterimage::depth::uint_8_bit, 1},
+			{rasterimage::format::greya,     rasterimage::depth::uint_8_bit, 2},
+			{  rasterimage::format::rgb,     rasterimage::depth::uint_8_bit, 3},
+			{ rasterimage::format::rgba,     rasterimage::depth::uint_8_bit, 4},
+			{ rasterimage::format::grey,    rasterimage::depth::uint_16_bit, 1},
+			{rasterimage::format::greya,    rasterimage::depth::uint_16_bit, 2},
+			{  rasterimage::format::rgb,    rasterimage::depth::uint_16_bit, 3},
+			{ rasterimage::format::rgba,    rasterimage::depth::uint_16_bit, 4},
+			{ rasterimage::format::grey, rasterimage::depth::floating_point, 1},
+			{rasterimage::format::greya, rasterimage::depth::floating_point, 2},
+			{  rasterimage::format::rgb, rasterimage::depth::floating_point, 3},
+			{ rasterimage::format::rgba, rasterimage::depth::floating_point, 4},
     },
-    [](const auto& p){
-        rasterimage::image im{
-            {10, 20},
-            std::get<rasterimage::format>(p),
-            std::get<rasterimage::depth>(p)
-        };
+		[](const auto& p) {
+			rasterimage::image im{
+				{10, 20},
+				std::get<rasterimage::format>(p),
+				std::get<rasterimage::depth>(p)
+            };
 
-        tst::check_eq(im.num_channels(), std::get<size_t>(p), SL);
-        tst::check(im.get_format() == std::get<rasterimage::format>(p), SL);
-        tst::check(im.get_depth() == std::get<rasterimage::depth>(p), SL);
+			tst::check_eq(im.num_channels(), std::get<size_t>(p), SL);
+			tst::check(im.get_format() == std::get<rasterimage::format>(p), SL);
+			tst::check(im.get_depth() == std::get<rasterimage::depth>(p), SL);
 
-        rasterimage::image empty_im{
-            {0, 0},
-            std::get<rasterimage::format>(p),
-            std::get<rasterimage::depth>(p)
-        };
+			rasterimage::image empty_im{
+				{0, 0},
+				std::get<rasterimage::format>(p),
+				std::get<rasterimage::depth>(p)
+            };
 
-        tst::check_eq(empty_im.num_channels(), std::get<size_t>(p), SL);
-        tst::check(empty_im.get_format() == std::get<rasterimage::format>(p), SL);
-        tst::check(empty_im.get_depth() == std::get<rasterimage::depth>(p), SL);
-    });
+			tst::check_eq(empty_im.num_channels(), std::get<size_t>(p), SL);
+			tst::check(empty_im.get_format() == std::get<rasterimage::format>(p), SL);
+			tst::check(empty_im.get_depth() == std::get<rasterimage::depth>(p), SL);
+		}
+	);
 
-    suite.add("image_dims", [](){
-        rasterimage::dimensioned::dimensions_type expected = {13, 20};
+	suite.add("image_dims", []() {
+		rasterimage::dimensioned::dimensions_type expected = {13, 20};
 
-        for(auto d = 0; d != size_t(rasterimage::depth::enum_size); ++d){
-            for(auto f = 0; f != size_t(rasterimage::format::enum_size); ++f){
-                rasterimage::image im{expected, rasterimage::format(f), rasterimage::depth(d)};
+		for (auto d = 0; d != size_t(rasterimage::depth::enum_size); ++d) {
+			for (auto f = 0; f != size_t(rasterimage::format::enum_size); ++f) {
+				rasterimage::image im{expected, rasterimage::format(f), rasterimage::depth(d)};
 
-                tst::check_eq(im.dims(), expected, SL);
-            }
-        }
-    });
+				tst::check_eq(im.dims(), expected, SL);
+			}
+		}
+	});
 });
-}
+} // namespace

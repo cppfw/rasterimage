@@ -1,5 +1,6 @@
 include prorab.mk
 include prorab-test.mk
+include prorab-clang-format.mk
 
 $(eval $(call prorab-config, ../../config))
 
@@ -14,6 +15,8 @@ this_ldlibs += $(this_lib_raster_image)
 this_ldlibs += -ltst -lutki
 
 $(eval $(prorab-build-app))
+
+$(eval $(prorab-clang-format))
 
 $(eval $(call prorab-depend, $(prorab_this_name), $(this_lib_raster_image)))
 

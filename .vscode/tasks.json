@@ -34,6 +34,12 @@
             "type": "shell",
             "command": "make clean-all",
             "group": "build"
+        },
+        {
+            "label": "format",
+            "type": "shell",
+            "command": "make apply-format",
+            "group": "build"
         }
     ]
 }

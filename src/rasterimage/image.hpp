@@ -34,6 +34,8 @@ public:
 
 	using pixel_type = r4::vector<channel_type, num_channels>;
 
+	static_assert(sizeof(pixel_type) == sizeof(channel_type) * number_of_channels, "pixel_type has padding");
+
 private:
 	std::vector<pixel_type> buffer;
 

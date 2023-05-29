@@ -1,25 +1,21 @@
 #include <rasterimage/image_variant.hpp>
 #include <tst/check.hpp>
 #include <tst/set.hpp>
+#include <utki/enum_iterable.hpp>
 
 namespace {
 tst::set set("image_variant", [](tst::suite& suite) {
 	suite.add<std::tuple<rasterimage::format, rasterimage::depth, size_t>>(
 		"image_num_channels",
-		{
-			{ rasterimage::format::grey,     rasterimage::depth::uint_8_bit, 1},
-			{rasterimage::format::greya,     rasterimage::depth::uint_8_bit, 2},
-			{  rasterimage::format::rgb,     rasterimage::depth::uint_8_bit, 3},
-			{ rasterimage::format::rgba,     rasterimage::depth::uint_8_bit, 4},
-			{ rasterimage::format::grey,    rasterimage::depth::uint_16_bit, 1},
-			{rasterimage::format::greya,    rasterimage::depth::uint_16_bit, 2},
-			{  rasterimage::format::rgb,    rasterimage::depth::uint_16_bit, 3},
-			{ rasterimage::format::rgba,    rasterimage::depth::uint_16_bit, 4},
-			{ rasterimage::format::grey, rasterimage::depth::floating_point, 1},
-			{rasterimage::format::greya, rasterimage::depth::floating_point, 2},
-			{  rasterimage::format::rgb, rasterimage::depth::floating_point, 3},
-			{ rasterimage::format::rgba, rasterimage::depth::floating_point, 4},
-    },
+		[]() {
+			std::vector<std::tuple<rasterimage::format, rasterimage::depth, size_t>> ret;
+			for (auto d : utki::enum_iterable_v<rasterimage::depth>) {
+				for (auto f : utki::enum_iterable_v<rasterimage::format>) {
+					ret.emplace_back(f, d, rasterimage::to_num_channels(f));
+				}
+			}
+			return ret;
+		}(),
 		[](const auto& p) {
 			rasterimage::image_variant im{
 				{10, 20},

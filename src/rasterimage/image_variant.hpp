@@ -9,7 +9,7 @@ namespace rasterimage {
 enum class depth {
 	uint_8_bit,
 	uint_16_bit,
-	floating_point,
+	float_32_bit,
 
 	enum_size
 };
@@ -18,7 +18,10 @@ template <depth depth_enum>
 using depth_type_t = std::conditional_t<
 	depth_enum == depth::uint_8_bit,
 	uint8_t,
-	std::conditional_t<depth_enum == depth::uint_16_bit, uint16_t, float>>;
+	std::conditional_t<
+		depth_enum == depth::uint_16_bit,
+		uint16_t,
+		std::conditional_t<depth_enum == depth::float_32_bit, float, void>>>;
 
 enum class format {
 	grey,

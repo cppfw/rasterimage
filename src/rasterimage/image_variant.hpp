@@ -58,12 +58,12 @@ public:
 private:
 	variant_type variant;
 
-	static size_t to_variant_index(format pixel_components, depth channel_depth);
+	static size_t to_variant_index(format pixel_format, depth channel_depth);
 
 public:
 	image_variant(
 		const r4::vector2<uint32_t>& dimensions = {0, 0},
-		format pixel_components = format::rgba,
+		format pixel_format = format::rgba,
 		depth channel_depth = depth::uint_8_bit
 	);
 

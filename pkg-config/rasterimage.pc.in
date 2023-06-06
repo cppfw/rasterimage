@@ -1,0 +1,9 @@
+Name: rasterimage   # human-readable name
+Description: raster image C++ library # human-readable description
+Version: $(version)
+URL: https://github.com/cppfw/rasterimage
+Requires:
+Conflicts:
+Libs: -lrasterimage
+Libs.private:
+Cflags:

@@ -1,0 +1,42 @@
+Source: librasterimage
+Section: libs
+Priority: extra
+Maintainer: Ivan Gagis <igagis@gmail.com>
+Build-Depends:
+	debhelper (>= 9),
+	prorab,
+	prorab-extra,
+	libc6-dev,
+	libutki-dev
+Build-Depends-Indep: doxygen
+Standards-Version: 3.9.2
+
+Package: librasterimage$(soname)
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: cross-platform raster image C++ library.
+ Raster image library.
+
+Package: librasterimage$(soname)-dbgsrc
+Section: debug
+Architecture: any
+Depends: librasterimage$(soname)-dbgsym (= ${binary:Version}), ${misc:Depends}
+Description: debugging sources for librasterimage$(soname) package.
+
+Package: librasterimage-dev
+Section: libdevel
+Architecture: any
+Depends:
+	libutki-dev,
+	librasterimage$(soname) (= ${binary:Version}), ${misc:Depends}
+Suggests: librasterimage-doc
+Description: cross-platform raster image C++ library.
+ Raster image library.
+
+Package: librasterimage-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: documentation for librasterimage library.
+ For more details see description to librasterimage-dev package.

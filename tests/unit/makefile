@@ -14,6 +14,8 @@ this_cxxflags += -I ../../src
 this_ldlibs += $(this_lib_raster_image)
 this_ldlibs += -ltst -lutki
 
+this_no_install := true
+
 $(eval $(prorab-build-app))
 
 $(eval $(prorab-clang-format))

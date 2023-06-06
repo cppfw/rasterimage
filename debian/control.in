@@ -7,7 +7,8 @@ Build-Depends:
 	prorab,
 	prorab-extra,
 	libc6-dev,
-	libutki-dev
+	libutki-dev,
+	libtst-dev
 Build-Depends-Indep: doxygen
 Standards-Version: 3.9.2
 

@@ -22,7 +22,7 @@ tst::set set("image", [](tst::suite& suite) {
 
 		for (uint32_t y = 0; y != im.dims().y(); ++y) {
 			for (uint32_t x = 0; x != im.dims().x(); ++x) {
-				const auto& p = im.pixels()[y * im.dims().x() + x];
+				auto p = im.pixels()[y * im.dims().x() + x];
 				tst::check_eq(p.r(), decltype(im)::pixel_type::value_type(10), SL);
 				tst::check_eq(p.g(), decltype(im)::pixel_type::value_type(20), SL);
 				tst::check_eq(p.b(), decltype(im)::pixel_type::value_type(30), SL);

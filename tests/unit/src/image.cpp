@@ -252,7 +252,7 @@ tst::set set("image", [](tst::suite& suite) {
 
 		tst::check_eq(b[0][0], expected, SL);
 
-		b += cim.dims().y();
+		b = utki::next(b, cim.dims().y());
 
 		tst::check(b == e, SL);
 	});

@@ -9,7 +9,7 @@ class Librasterimage < Formula
   depends_on "myci" => :build
   depends_on "libtst" => :build
   depends_on "libpng"
-  depends_on "libjpeg"
+  depends_on "jpeg"
   depends_on "libutki"
   depends_on "libpapki"
   depends_on "libr4"

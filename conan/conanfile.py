@@ -19,7 +19,10 @@ class RasterimageConan(ConanFile):
 
 	def requirements(self):
 		self.requires("utki/[>=1.1.192]@cppfw/main", transitive_headers=True)
+		self.requires("papki/[>=0.0.0]@cppfw/main", transitive_headers=True)
 		self.requires("r4/[>=0.0.0]@cppfw/main", transitive_headers=True)
+		self.requires("libpng/[>=1.6.37]")
+		self.requires("libjpeg/[>=0.0.0]")
 	
 	def build_requirements(self):
 		self.requires("tst/[>=0.3.29]@cppfw/main", visible=False)

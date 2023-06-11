@@ -9,7 +9,9 @@ class Librasterimage < Formula
   depends_on "myci" => :build
   depends_on "libtst" => :build
   depends_on "libpng"
+  depends_on "libjpeg"
   depends_on "libutki"
+  depends_on "libpapki"
   depends_on "libr4"
 
   # use gmake here because otherwise homebrew uses default Mac's make which is of too old version 3.81

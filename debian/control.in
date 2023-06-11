@@ -11,7 +11,10 @@ Build-Depends:
 	clang-tidy,
 	libutki-dev,
 	libr4-dev,
-	libtst-dev
+	libtst-dev,
+	libpapki-dev,
+	libpng-dev,
+	libjpeg-dev
 Build-Depends-Indep: doxygen
 Standards-Version: 3.9.2
 
@@ -33,6 +36,7 @@ Section: libdevel
 Architecture: any
 Depends:
 	libutki-dev,
+	libpapki-dev,
 	librasterimage$(soname) (= ${binary:Version}), ${misc:Depends}
 Suggests: librasterimage-doc
 Description: cross-platform raster image C++ library.

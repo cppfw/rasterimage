@@ -11,6 +11,8 @@ this_soname := $(shell cat $(d)soname.txt)
 
 this_srcs := $(call prorab-src-dir, .)
 
+this_ldlibs += -lpapki -lpng -ljpeg
+
 $(eval $(prorab-build-lib))
 
 this_src_dir := $(this_name)

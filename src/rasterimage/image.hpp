@@ -1,7 +1,7 @@
 /*
-MIT License
+The MIT License (MIT)
 
-Copyright (c) 2023 Ivan Gagis
+Copyright (c) 2015-2023 Ivan Gagis <igagis@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
 /* ================ LICENSE END ================ */
@@ -29,6 +30,8 @@ SOFTWARE.
 #include <r4/vector.hpp>
 #include <utki/debug.hpp>
 #include <utki/span.hpp>
+
+#include "operations.hpp"
 
 // TODO: doxygen
 namespace rasterimage {
@@ -59,8 +62,15 @@ public:
 	static const size_t num_channels = number_of_channels;
 
 	using pixel_type = r4::vector<channel_type, num_channels>;
+	using value_type = typename pixel_type::value_type;
 
 	static_assert(sizeof(pixel_type) == sizeof(channel_type) * number_of_channels, "pixel_type has padding");
+
+	static_assert(
+		// NOLINTNEXTLINE(modernize-avoid-c-arrays)
+		sizeof(pixel_type[2]) == sizeof(pixel_type) * 2,
+		"pixel_type array has gaps"
+	);
 
 private:
 	std::vector<pixel_type> buffer;
@@ -236,9 +246,32 @@ public:
 		buffer(this->dimensions.x() * this->dimensions.y()){
 			ASSERT(!this->buffer.empty() || (this->dimensions.x() == 0 && !this->buffer.data()))}
 
+		image(dimensions_type dimensions, pixel_type fill) :
+		image(dimensions)
+	{
+		std::fill(this->pixels().begin(), this->pixels().end(), fill);
+	}
+
+	image(dimensions_type dimensions, decltype(buffer) buffer) :
+		dimensioned(dimensions),
+		buffer(std::move(buffer)){ASSERT(
+			this->dims().x() * this->dims().y() == this->pixels().size(),
+			[this](auto& o) {
+				o << "rasterimage::image::image(dims, buffer): dimensions do not match with pixels array size"
+				  << "\n";
+				o << "\t"
+				  << "dims = " << this->dims() << ", pixels().size() = " << this->pixels().size();
+			}
+		)}
+
 		iterator begin() noexcept
 	{
 		return iterator(utki::make_span(this->buffer.data(), this->dimensions.x()));
+	}
+
+	bool empty() const noexcept
+	{
+		return this->buffer.empty();
 	}
 
 	iterator end() noexcept
@@ -276,15 +309,6 @@ public:
 		return reverse_iterator(this->begin());
 	}
 
-	void clear(pixel_type val)
-	{
-		for (auto l : *this) {
-			for (auto& p : l) {
-				p = val;
-			}
-		}
-	}
-
 	utki::span<pixel_type> pixels() noexcept
 	{
 		return this->buffer;
@@ -303,6 +327,61 @@ public:
 	utki::span<const pixel_type> operator[](uint32_t line_index) const noexcept
 	{
 		return *utki::next(this->begin(), line_index);
+	}
+
+	void clear(pixel_type val)
+	{
+		for (auto l : *this) {
+			for (auto& p : l) {
+				p = val;
+			}
+		}
+	}
+
+	void swap_red_blue() noexcept
+	{
+		using std::swap;
+		for (auto& p : this->pixels()) {
+			swap(p.r(), p.b());
+		}
+	}
+
+	void unpremultiply_alpha() noexcept
+	{
+		for (auto& p : this->pixels()) {
+			p = rasterimage::unpremultiply_alpha(p);
+		}
+	}
+
+	static image make(dimensions_type dims, const value_type* data, size_t stride_in_values = 0)
+	{
+		if (stride_in_values == 0) {
+			stride_in_values = dims.x() * num_channels;
+		}
+
+		image im(dims);
+
+		auto src_row = data;
+
+		for (auto row : im) {
+			auto num_values_per_row = im.dims().x() * num_channels;
+			ASSERT(row.size() * num_channels == num_values_per_row)
+			std::copy( //
+				src_row,
+				src_row + num_values_per_row,
+				reinterpret_cast<value_type*>(row.data())
+			);
+			src_row += stride_in_values;
+		}
+
+		ASSERT(src_row == data + stride_in_values * im.dims().y())
+
+		return im;
+	}
+
+	constexpr static value_type value(float f)
+	{
+		return rasterimage::value<value_type>(f);
 	}
 };
 

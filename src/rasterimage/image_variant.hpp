@@ -1,7 +1,7 @@
 /*
-MIT License
+The MIT License (MIT)
 
-Copyright (c) 2023 Ivan Gagis
+Copyright (c) 2015-2023 Ivan Gagis <igagis@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 */
 
 /* ================ LICENSE END ================ */
@@ -27,6 +28,8 @@ SOFTWARE.
 #pragma once
 
 #include <variant>
+
+#include <papki/file.hpp>
 
 #include "image.hpp"
 
@@ -63,6 +66,16 @@ inline constexpr size_t to_num_channels(format f)
 	return size_t(f) + 1;
 }
 
+inline constexpr format to_format(unsigned num_channels)
+{
+#ifdef DEBUG
+	if (num_channels < 1 || 4 < num_channels) {
+		throw std::logic_error("num_channels out of range");
+	}
+#endif
+	return format(num_channels - 1);
+}
+
 // TODO: doxygen
 class image_variant
 {
@@ -81,9 +94,9 @@ public:
 		image<float, 3>,
 		image<float, 4>>;
 
-private:
 	variant_type variant;
 
+private:
 	static size_t to_variant_index(format pixel_format, depth channel_depth);
 
 public:
@@ -92,6 +105,11 @@ public:
 		format pixel_format = format::rgba,
 		depth channel_depth = depth::uint_8_bit
 	);
+
+	template <typename channel_type, size_t num_channels>
+	image_variant(image<channel_type, num_channels>&& im) :
+		variant(std::move(im))
+	{}
 
 	size_t num_channels() const noexcept
 	{
@@ -130,6 +148,14 @@ public:
 
 	const dimensioned::dimensions_type& dims() const noexcept;
 
+	bool empty() const noexcept;
+
+	/**
+	 * @brief Get buffer size.
+	 * @return Size of the underlying image buffer, in pixels.
+	 */
+	size_t buffer_size() const noexcept;
+
 	template <format components_enum, depth depth_enum = depth::uint_8_bit>
 	image<depth_type_t<depth_enum>, to_num_channels(components_enum)>& get()
 	{
@@ -141,6 +167,36 @@ public:
 	{
 		return std::get<image<depth_type_t<depth_enum>, to_num_channels(components_enum)>>(this->variant);
 	}
+
+	/**
+	 * @brief Write image to PNG file.
+	 *
+	 * @param fi - file interface for writing the file. Must not be opened.
+	 *             Exisitng file will be overwritten.
+	 */
+	void write_png(const papki::file& fi) const;
 };
+
+/**
+ * @brief Read PNG image from file.
+ * @param fi - file to read the image from. File must not be opened.
+ * @return Image read from the file.
+ */
+image_variant read_png(const papki::file& fi);
+
+/**
+ * @brief Read JPEG image from file.
+ * @param fi - file to read the image from. File must not be opened.
+ * @return Image read from the file.
+ */
+image_variant read_jpeg(const papki::file& fi);
+
+/**
+ * @brief Read image from file.
+ * Automatically detects the image file format by filename suffix.
+ * @param fi - file to read the image from. File must not be opened.
+ * @return Image read from file.
+ */
+image_variant read(const papki::file& fi);
 
 } // namespace rasterimage

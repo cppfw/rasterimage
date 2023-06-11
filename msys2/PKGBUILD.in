@@ -32,7 +32,7 @@ groups=()
 depends=(
 	"${pkgPrefix}utki"
 	"${pkgPrefix}r4"
-	"${pkgPrefix}libpapki"
+	"${pkgPrefix}papki"
 	"${pkgPrefix}libpng"
 	"${pkgPrefix}libjpeg"
 )

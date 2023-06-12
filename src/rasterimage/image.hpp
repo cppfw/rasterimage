@@ -40,7 +40,6 @@ class dimensioned
 public:
 	using dimensions_type = r4::vector2<uint32_t>;
 
-protected:
 	dimensions_type dimensions;
 
 public:
@@ -67,7 +66,7 @@ public:
 
 	static_assert(
 		// NOLINTNEXTLINE(modernize-avoid-c-arrays)
-		sizeof(pixel_type[2]) == sizeof(pixel_type) * 2,
+		sizeof(std::array<pixel_type, 2>) == sizeof(pixel_type) * 2,
 		"pixel_type array has gaps"
 	);
 
@@ -368,6 +367,7 @@ public:
 			std::copy( //
 				src_row,
 				src_row + num_values_per_row,
+				// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 				reinterpret_cast<value_type*>(row.data())
 			);
 			src_row += stride_in_values;

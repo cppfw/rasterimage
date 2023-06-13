@@ -68,6 +68,9 @@ image_variant::image_variant(const r4::vector2<uint32_t>& dimensions, format pix
 
 		auto i = to_variant_index(pixel_format, channel_depth);
 
+		ASSERT(i < factories_array.size())
+
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
 		return factories_array[i](dimensions);
 	}())
 {}
@@ -129,6 +132,7 @@ size_t image_variant::buffer_size() const noexcept
 namespace {
 void png_write_callback(png_structp png_ptr, png_bytep data, png_size_t length)
 {
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 	auto fi = reinterpret_cast<papki::file*>(png_get_io_ptr(png_ptr));
 	ASSERT(fi)
 
@@ -206,6 +210,7 @@ void image_variant::write_png(const papki::file& fi) const
 	// write image data
 	auto p = std::visit(
 		[](const auto& im) {
+			// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 			return reinterpret_cast<png_const_bytep>(im.pixels().data());
 		},
 		this->variant
@@ -239,6 +244,7 @@ image_variant rasterimage::read(const papki::file& fi)
 namespace {
 void png_read_callback(png_structp png_ptr, png_bytep data, png_size_t length)
 {
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 	auto fi = reinterpret_cast<papki::file*>(png_get_io_ptr(png_ptr));
 	ASSERT(fi)
 
@@ -257,10 +263,8 @@ image_variant rasterimage::read_png(const papki::file& fi)
 	static const unsigned png_sig_size = 8; // the size of PNG signature
 
 	{
-		std::array<png_byte, png_sig_size> sig;
+		std::array<png_byte, png_sig_size> sig = {0};
 		auto span = utki::make_span(sig);
-
-		std::fill(span.begin(), span.end(), 0);
 
 		auto num_bytes_read = fi.read(span);
 		if (num_bytes_read != span.size_bytes()) {

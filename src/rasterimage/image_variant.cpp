@@ -578,7 +578,7 @@ image_variant rasterimage::read_jpeg(const papki::file& fi)
 	image_variant im({cinfo.output_width, cinfo.output_height}, image_format, depth::uint_8_bit);
 
 	// calculate the size of a row in bytes
-	auto num_bytes_in_row = size_t(im.dims().x() * im.num_channels());
+	auto num_bytes_in_row = JDIMENSION(im.dims().x() * im.num_channels());
 
 	// Allocate memory for one row. It is an array of rows which
 	// contains only one row. JPOOL_IMAGE means that the memory is allocated

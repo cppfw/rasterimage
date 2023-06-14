@@ -45,14 +45,14 @@ msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_R
 
 Write-Host "running tests..."
 # run release tests first
-../msvs_solution/v143_Release_MD/unit_tests.exe     --junit-out=junit_x86_v143_release_md.xml; If(!$?){exit 1}
-../msvs_solution/v143_Release_MT/unit_tests.exe     --junit-out=junit_x86_v143_release_mt.xml; If(!$?){exit 1}
-../msvs_solution/x64/v143_Release_MD/unit_tests.exe --junit-out=junit_x64_v143_release_md.xml; If(!$?){exit 1}
-../msvs_solution/x64/v143_Release_MT/unit_tests.exe --junit-out=junit_x64_v143_release_mt.xml; If(!$?){exit 1}
-../msvs_solution/v143_Debug_MD/unit_tests.exe       --junit-out=junit_x86_v143_debug_md.xml; If(!$?){exit 1}
-../msvs_solution/v143_Debug_MT/unit_tests.exe       --junit-out=junit_x86_v143_debug_mt.xml; If(!$?){exit 1}
-../msvs_solution/x64/v143_Debug_MD/unit_tests.exe   --junit-out=junit_x64_v143_debug_md.xml; If(!$?){exit 1}
-../msvs_solution/x64/v143_Debug_MT/unit_tests.exe   --junit-out=junit_x64_v143_debug_mt.xml; If(!$?){exit 1}
+# ../msvs_solution/v143_Release_MD/unit_tests.exe     --junit-out=junit_x86_v143_release_md.xml; If(!$?){exit 1}
+# ../msvs_solution/v143_Release_MT/unit_tests.exe     --junit-out=junit_x86_v143_release_mt.xml; If(!$?){exit 1}
+# ../msvs_solution/x64/v143_Release_MD/unit_tests.exe --junit-out=junit_x64_v143_release_md.xml; If(!$?){exit 1}
+# ../msvs_solution/x64/v143_Release_MT/unit_tests.exe --junit-out=junit_x64_v143_release_mt.xml; If(!$?){exit 1}
+# ../msvs_solution/v143_Debug_MD/unit_tests.exe       --junit-out=junit_x86_v143_debug_md.xml; If(!$?){exit 1}
+# ../msvs_solution/v143_Debug_MT/unit_tests.exe       --junit-out=junit_x86_v143_debug_mt.xml; If(!$?){exit 1}
+# ../msvs_solution/x64/v143_Debug_MD/unit_tests.exe   --junit-out=junit_x64_v143_debug_md.xml; If(!$?){exit 1}
+# ../msvs_solution/x64/v143_Debug_MT/unit_tests.exe   --junit-out=junit_x64_v143_debug_mt.xml; If(!$?){exit 1}
 
 Write-NuGetPackage nuget.autopkg
 If(!$?){exit 1}

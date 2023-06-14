@@ -1,0 +1,118 @@
+configurations {
+	UserPlatformToolset {
+		// Needed because autopackage lacks VS2015+ support
+		key = "PlatformToolset";
+		choices: "v140,v141,v142,v143";
+	};
+
+	RuntimeLibrary {
+		key = "RuntimeLibrary"; // This is the key you can find in .vcxproj file
+		choices: "MultiThreaded,MultiThreadedDebug,MultiThreadedDLL,MultiThreadedDebugDLL"; // these choices must be valid values for .vcxproj file
+	};
+}
+
+nuget{
+	nuspec{
+		id = librasterimage;
+		version : $(version);
+		title: raster image C++ library;
+		authors: {Ivan Gagis};
+		owners: {Ivan Gagis};
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/rasterimage/master/LICENSE";
+		projectUrl: "https://github.com/cppfw/rasterimage";
+		iconUrl: "https://github.com/cppfw/rasterimage/blob/master/logo.svg";
+		requireLicenseAcceptance:false;
+		summary: raster image C++ library;
+
+		description: @"raster image C++ library";
+		releaseNotes: "Initial release";
+		copyright: Copyright 2023 Ivan Gagis;
+		tags: { native };
+	}
+	dependencies {
+		packages : {
+			libjpeg_static/6.1.1.13;
+			libpng_static/1.4.1.14;
+			libutki/1.1.205;
+			libpapki/1.0.128;
+			libr4/1.0.74;
+		};
+	}
+	files {
+		// this is needed to put headers in the base folder
+		nestedInclude: {
+			#destination = ${d_include}rasterimage;
+			"..\src\rasterimage\**\*.hpp"
+		};
+
+		//==== v141 tools ====
+		/*
+		[x86,v141,release] {
+			lib: ..\msvs_solution\v141_Release\librasterimage.lib;
+		}
+		[x86,v141,debug] {
+			lib: ..\msvs_solution\v141_Debug\librasterimage.lib;
+		}
+		[x64,v141,release] {
+			lib: ..\msvs_solution\x64\v141_Release\librasterimage.lib;
+		}
+		[x64,v141,debug] {
+			lib: ..\msvs_solution\x64\v141_Debug\librasterimage.lib;
+		}
+		*/
+
+		//==== v142 tools ====
+
+		[x86,v142,release,MultiThreaded] {
+			lib: ..\msvs_solution\v142_Release_MT\librasterimage.lib;
+		}
+		[x86,v142,debug,MultiThreadedDebug] {
+			lib: ..\msvs_solution\v142_Debug_MT\librasterimage.lib;
+		}
+		[x64,v142,release,MultiThreaded] {
+			lib: ..\msvs_solution\x64\v142_Release_MT\librasterimage.lib;
+		}
+		[x64,v142,debug,MultiThreadedDebug] {
+			lib: ..\msvs_solution\x64\v142_Debug_MT\librasterimage.lib;
+		}
+		[x86,v142,release,MultiThreadedDLL] {
+			lib: ..\msvs_solution\v142_Release_MD\librasterimage.lib;
+		}
+		[x86,v142,debug,MultiThreadedDebugDLL] {
+			lib: ..\msvs_solution\v142_Debug_MD\librasterimage.lib;
+		}
+		[x64,v142,release,MultiThreadedDLL] {
+			lib: ..\msvs_solution\x64\v142_Release_MD\librasterimage.lib;
+		}
+		[x64,v142,debug,MultiThreadedDebugDLL] {
+			lib: ..\msvs_solution\x64\v142_Debug_MD\librasterimage.lib;
+		}
+
+		//==== v143 tools ====
+
+		[x86,v143,release,MultiThreaded] {
+			lib: ..\msvs_solution\v143_Release_MT\librasterimage.lib;
+		}
+		[x86,v143,debug,MultiThreadedDebug] {
+			lib: ..\msvs_solution\v143_Debug_MT\librasterimage.lib;
+		}
+		[x64,v143,release,MultiThreaded] {
+			lib: ..\msvs_solution\x64\v143_Release_MT\librasterimage.lib;
+		}
+		[x64,v143,debug,MultiThreadedDebug] {
+			lib: ..\msvs_solution\x64\v143_Debug_MT\librasterimage.lib;
+		}
+		[x86,v143,release,MultiThreadedDLL] {
+			lib: ..\msvs_solution\v143_Release_MD\librasterimage.lib;
+		}
+		[x86,v143,debug,MultiThreadedDebugDLL] {
+			lib: ..\msvs_solution\v143_Debug_MD\librasterimage.lib;
+		}
+		[x64,v143,release,MultiThreadedDLL] {
+			lib: ..\msvs_solution\x64\v143_Release_MD\librasterimage.lib;
+		}
+		[x64,v143,debug,MultiThreadedDebugDLL] {
+			lib: ..\msvs_solution\x64\v143_Debug_MD\librasterimage.lib;
+		}
+	}
+}

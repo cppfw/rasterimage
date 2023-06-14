@@ -85,7 +85,7 @@ const dimensioned::dimensions_type& image_variant::dims() const noexcept
 			},
 			this->variant
 		);
-	} catch (std::bad_variant_access& e) {
+	} catch (std::bad_variant_access&) {
 		// this->variant must never be valueless_by_exeception,
 		// so should never reach here
 		ASSERT(false)
@@ -103,7 +103,7 @@ bool image_variant::empty() const noexcept
 			},
 			this->variant
 		);
-	} catch (std::bad_variant_access& e) {
+	} catch (std::bad_variant_access&) {
 		// this->variant must never be valueless_by_exeception,
 		// so should never reach here
 		ASSERT(false)
@@ -121,7 +121,7 @@ size_t image_variant::buffer_size() const noexcept
 			},
 			this->variant
 		);
-	} catch (std::bad_variant_access& e) {
+	} catch (std::bad_variant_access&) {
 		// this->variant must never be valueless_by_exeception,
 		// so should never reach here
 		ASSERT(false)

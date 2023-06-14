@@ -613,6 +613,7 @@
     <Import Project="..\packages\libjpeg_static.6.1.1.13\build\native\libjpeg_static.targets" Condition="Exists('..\packages\libjpeg_static.6.1.1.13\build\native\libjpeg_static.targets')" />
     <Import Project="..\packages\libutki.1.1.205\build\native\libutki.targets" Condition="Exists('..\packages\libutki.1.1.205\build\native\libutki.targets')" />
     <Import Project="..\packages\zlib_static.1.2.11.12\build\native\zlib_static.targets" Condition="Exists('..\packages\zlib_static.1.2.11.12\build\native\zlib_static.targets')" />
+    <Import Project="..\packages\libr4.1.0.74\build\native\libr4.targets" Condition="Exists('..\packages\libr4.1.0.74\build\native\libr4.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -623,5 +624,6 @@
     <Error Condition="!Exists('..\packages\libjpeg_static.6.1.1.13\build\native\libjpeg_static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libjpeg_static.6.1.1.13\build\native\libjpeg_static.targets'))" />
     <Error Condition="!Exists('..\packages\libutki.1.1.205\build\native\libutki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libutki.1.1.205\build\native\libutki.targets'))" />
     <Error Condition="!Exists('..\packages\zlib_static.1.2.11.12\build\native\zlib_static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib_static.1.2.11.12\build\native\zlib_static.targets'))" />
+    <Error Condition="!Exists('..\packages\libr4.1.0.74\build\native\libr4.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libr4.1.0.74\build\native\libr4.targets'))" />
   </Target>
 </Project>

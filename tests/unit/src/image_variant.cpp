@@ -4,7 +4,7 @@
 #include <utki/enum_iterable.hpp>
 
 namespace {
-tst::set set("image_variant", [](tst::suite& suite) {
+const tst::set set("image_variant", [](tst::suite& suite) {
 	suite.add<std::tuple<rasterimage::format, rasterimage::depth, size_t>>(
 		"image_num_channels",
 		[]() {

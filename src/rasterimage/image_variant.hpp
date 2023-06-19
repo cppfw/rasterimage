@@ -53,7 +53,9 @@ using depth_type_t = std::conditional_t<
 
 enum class format {
 	grey,
+	gray = grey,
 	greya,
+	graya = greya,
 	rgb,
 	rgba,
 

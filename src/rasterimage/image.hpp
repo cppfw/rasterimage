@@ -87,7 +87,7 @@ private:
 		std::conditional_t<is_const, const_value_type, non_const_value_type> line;
 
 		iterator_internal(decltype(line) line) :
-			line(line)
+			line(std::move(line))
 		{}
 
 	public:
@@ -274,6 +274,7 @@ public:
 
 	iterator end() noexcept
 	{
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		return iterator(utki::make_span(this->buffer.data() + this->dimensions.x() * this->dimensions.y(), 0));
 	}
 
@@ -284,6 +285,7 @@ public:
 
 	const_iterator cend() const noexcept
 	{
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		return const_iterator(utki::make_span(this->buffer.data() + this->dimensions.x() * this->dimensions.y(), 0));
 	}
 

@@ -3,7 +3,7 @@
 #include <tst/set.hpp>
 
 namespace {
-tst::set set("image", [](tst::suite& suite) {
+const tst::set set("image", [](tst::suite& suite) {
 	suite.add("clear", []() {
 		rasterimage::image<uint8_t, 4> im(rasterimage::dimensioned::dimensions_type{100, 200});
 

@@ -9,5 +9,5 @@ target "rasterimage" do
 	pod 'papki', '>= 1.0.129'
 	pod 'r4', '>= 1.0.75'
 	pod 'jpeg', '>= 6.1.1.11'
-	pod 'png', '>= '1.6.39.1'
+	pod 'png', '>= 1.6.39.1'
 end

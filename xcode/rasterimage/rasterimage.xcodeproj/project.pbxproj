@@ -6,7 +6,12 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2CAC1AAF2A460D2F00A28AEE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2CAC1AAE2A460D2F00A28AEE /* Info.plist */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		2CAC1AAE2A460D2F00A28AEE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CB474452A45C08D003C2653 /* rasterimage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = rasterimage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -21,9 +26,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2CAC1AAD2A460D2F00A28AEE /* rasterimage */ = {
+			isa = PBXGroup;
+			children = (
+				2CAC1AAE2A460D2F00A28AEE /* Info.plist */,
+			);
+			path = rasterimage;
+			sourceTree = "<group>";
+		};
 		2CB4743B2A45C08D003C2653 = {
 			isa = PBXGroup;
 			children = (
+				2CAC1AAD2A460D2F00A28AEE /* rasterimage */,
 				2CB474462A45C08D003C2653 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +117,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CAC1AAF2A460D2F00A28AEE /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

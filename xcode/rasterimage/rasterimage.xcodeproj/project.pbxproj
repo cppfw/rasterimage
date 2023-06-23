@@ -6,14 +6,8 @@
 	objectVersion = 50;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		2CB4744A2A45C08D003C2653 /* rasterimage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CB474482A45C08D003C2653 /* rasterimage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		2CB474452A45C08D003C2653 /* rasterimage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = rasterimage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2CB474482A45C08D003C2653 /* rasterimage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rasterimage.h; sourceTree = "<group>"; };
-		2CB474492A45C08D003C2653 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,7 +24,6 @@
 		2CB4743B2A45C08D003C2653 = {
 			isa = PBXGroup;
 			children = (
-				2CB474472A45C08D003C2653 /* rasterimage */,
 				2CB474462A45C08D003C2653 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,15 +36,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2CB474472A45C08D003C2653 /* rasterimage */ = {
-			isa = PBXGroup;
-			children = (
-				2CB474482A45C08D003C2653 /* rasterimage.h */,
-				2CB474492A45C08D003C2653 /* Info.plist */,
-			);
-			path = rasterimage;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -59,7 +43,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CB4744A2A45C08D003C2653 /* rasterimage.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,11 +247,15 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = rasterimage/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = staticlib;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = cppfw.github.io.rasterimage;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -286,11 +273,15 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = rasterimage/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = staticlib;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = cppfw.github.io.rasterimage;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;

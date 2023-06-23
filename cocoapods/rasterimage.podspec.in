@@ -16,5 +16,8 @@ Pod::Spec.new do |s|
   s.ios.vendored_framework = "lib/ios/#{s.name}.xcframework"
 
   s.dependency 'utki', '>= 1.1.211'
-
+  s.dependency 'papki', '>= 1.0.129'
+  s.dependency 'r4', '>= 1.0.75'
+  s.dependency 'png', '>= 1.6.39.1'
+  s.dependency 'jpeg', '>= 6.1.1.13'
 end

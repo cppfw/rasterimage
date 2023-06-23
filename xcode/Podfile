@@ -1,10 +1,13 @@
 source 'https://github.com/igagis/cocoapods-repo.git'
 
-project '%name%/%name%.xcodeproj'
+project 'rasterimage/rasterimage.xcodeproj'
 
-platform :ios, '9.0'
+platform :ios, '11.0'
 
-target "%name%" do
-	pod 'utki', '>= 1.1.164'
-	%other-deps%
+target "rasterimage" do
+	pod 'utki', '>= 1.1.211'
+	pod 'papki', '>= 1.0.129'
+	pod 'r4', '>= 1.0.75'
+	pod 'jpeg', '>= 6.1.1.11'
+	pod 'png', '>= '1.6.39.1'
 end

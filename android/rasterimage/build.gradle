@@ -1,25 +1,42 @@
-plugins {
-    id 'com.android.application'
-    id 'com.ydq.android.gradle.native-aar.import' // must go after android gradle plugin
-    id 'com.ydq.android.gradle.native-aar.export' // must go after android gradle plugin
-}
+//plugins {
+//    id 'com.android.application'
+//    id 'com.ydq.android.gradle.native-aar.import' // must go after android gradle plugin
+//    id 'com.ydq.android.gradle.native-aar.export' // must go after android gradle plugin
+//}
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.ydq.android.gradle.native-aar.export' // must go after android gradle plugin
+apply plugin: 'com.ydq.android.gradle.native-aar.import' // must go after android gradle plugin
 
 android {
     namespace 'cppfw.github.io.rasterimage'
-    compileSdk 33
+    compileSdk 29
+
+//    defaultConfig {
+//        applicationId "cppfw.github.io.rasterimage"
+//        minSdk 21
+//        targetSdk 33
+//        versionCode 1
+//        versionName "1.0"
+//
+//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//
+//        externalNativeBuild {
+//            cmake {
+//                targets "<library-name>"
+//            }
+//        }
+//    }
 
     defaultConfig {
-        applicationId "cppfw.github.io.rasterimage"
-        minSdk 21
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 21
+        targetSdkVersion 29
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         externalNativeBuild {
             cmake {
-                targets "<library-name>"
+                targets "rasterimage"
             }
         }
     }
@@ -56,6 +73,9 @@ repositories {
 dependencies {
     implementation 'io.github.cppfw:utki:+'
     implementation 'io.github.cppfw:papki:+'
+    implementation 'io.github.cppfw:r4:+'
+    implementation 'io.github.cppfw:jpeg:+'
+    implementation 'io.github.cppfw:png:+'
 }
 
 // copy and rename release AAR to unified name

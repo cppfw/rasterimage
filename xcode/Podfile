@@ -1,0 +1,10 @@
+source 'https://github.com/igagis/cocoapods-repo.git'
+
+project '%name%/%name%.xcodeproj'
+
+platform :ios, '9.0'
+
+target "%name%" do
+	pod 'utki', '>= 1.1.164'
+	%other-deps%
+end

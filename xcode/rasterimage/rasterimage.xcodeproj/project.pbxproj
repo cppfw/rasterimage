@@ -6,17 +6,13 @@
 	objectVersion = 50;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		2CAC1AAF2A460D2F00A28AEE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2CAC1AAE2A460D2F00A28AEE /* Info.plist */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
-		2CAC1AAE2A460D2F00A28AEE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2CB474452A45C08D003C2653 /* rasterimage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = rasterimage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CAC1ABB2A460EB800A28AEE /* rasterimage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = rasterimage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CAC1ABF2A460EB800A28AEE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2CB474422A45C08D003C2653 /* Frameworks */ = {
+		2CAC1AB82A460EB800A28AEE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -26,34 +22,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2CAC1AAD2A460D2F00A28AEE /* rasterimage */ = {
+		2CAC1AB12A460EB800A28AEE = {
 			isa = PBXGroup;
 			children = (
-				2CAC1AAE2A460D2F00A28AEE /* Info.plist */,
-			);
-			path = rasterimage;
-			sourceTree = "<group>";
-		};
-		2CB4743B2A45C08D003C2653 = {
-			isa = PBXGroup;
-			children = (
-				2CAC1AAD2A460D2F00A28AEE /* rasterimage */,
-				2CB474462A45C08D003C2653 /* Products */,
+				2CAC1ABD2A460EB800A28AEE /* rasterimage */,
+				2CAC1ABC2A460EB800A28AEE /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		2CB474462A45C08D003C2653 /* Products */ = {
+		2CAC1ABC2A460EB800A28AEE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2CB474452A45C08D003C2653 /* rasterimage.framework */,
+				2CAC1ABB2A460EB800A28AEE /* rasterimage.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2CAC1ABD2A460EB800A28AEE /* rasterimage */ = {
+			isa = PBXGroup;
+			children = (
+				2CAC1ABF2A460EB800A28AEE /* Info.plist */,
+			);
+			path = rasterimage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		2CB474402A45C08D003C2653 /* Headers */ = {
+		2CAC1AB62A460EB800A28AEE /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -63,14 +59,14 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		2CB474442A45C08D003C2653 /* rasterimage */ = {
+		2CAC1ABA2A460EB800A28AEE /* rasterimage */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2CB4744D2A45C08D003C2653 /* Build configuration list for PBXNativeTarget "rasterimage" */;
+			buildConfigurationList = 2CAC1AC32A460EB800A28AEE /* Build configuration list for PBXNativeTarget "rasterimage" */;
 			buildPhases = (
-				2CB474402A45C08D003C2653 /* Headers */,
-				2CB474412A45C08D003C2653 /* Sources */,
-				2CB474422A45C08D003C2653 /* Frameworks */,
-				2CB474432A45C08D003C2653 /* Resources */,
+				2CAC1AB62A460EB800A28AEE /* Headers */,
+				2CAC1AB72A460EB800A28AEE /* Sources */,
+				2CAC1AB82A460EB800A28AEE /* Frameworks */,
+				2CAC1AB92A460EB800A28AEE /* Resources */,
 			);
 			buildRules = (
 			);
@@ -78,23 +74,23 @@
 			);
 			name = rasterimage;
 			productName = rasterimage;
-			productReference = 2CB474452A45C08D003C2653 /* rasterimage.framework */;
+			productReference = 2CAC1ABB2A460EB800A28AEE /* rasterimage.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		2CB4743C2A45C08D003C2653 /* Project object */ = {
+		2CAC1AB22A460EB800A28AEE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
-					2CB474442A45C08D003C2653 = {
+					2CAC1ABA2A460EB800A28AEE = {
 						CreatedOnToolsVersion = 12.4;
 					};
 				};
 			};
-			buildConfigurationList = 2CB4743F2A45C08D003C2653 /* Build configuration list for PBXProject "rasterimage" */;
+			buildConfigurationList = 2CAC1AB52A460EB800A28AEE /* Build configuration list for PBXProject "rasterimage" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -102,29 +98,28 @@
 				en,
 				Base,
 			);
-			mainGroup = 2CB4743B2A45C08D003C2653;
-			productRefGroup = 2CB474462A45C08D003C2653 /* Products */;
+			mainGroup = 2CAC1AB12A460EB800A28AEE;
+			productRefGroup = 2CAC1ABC2A460EB800A28AEE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2CB474442A45C08D003C2653 /* rasterimage */,
+				2CAC1ABA2A460EB800A28AEE /* rasterimage */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2CB474432A45C08D003C2653 /* Resources */ = {
+		2CAC1AB92A460EB800A28AEE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CAC1AAF2A460D2F00A28AEE /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2CB474412A45C08D003C2653 /* Sources */ = {
+		2CAC1AB72A460EB800A28AEE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -134,7 +129,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		2CB4744B2A45C08D003C2653 /* Debug */ = {
+		2CAC1AC12A460EB800A28AEE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -196,7 +191,7 @@
 			};
 			name = Debug;
 		};
-		2CB4744C2A45C08D003C2653 /* Release */ = {
+		2CAC1AC22A460EB800A28AEE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -252,7 +247,7 @@
 			};
 			name = Release;
 		};
-		2CB4744E2A45C08D003C2653 /* Debug */ = {
+		2CAC1AC42A460EB800A28AEE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -278,7 +273,7 @@
 			};
 			name = Debug;
 		};
-		2CB4744F2A45C08D003C2653 /* Release */ = {
+		2CAC1AC52A460EB800A28AEE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -307,25 +302,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2CB4743F2A45C08D003C2653 /* Build configuration list for PBXProject "rasterimage" */ = {
+		2CAC1AB52A460EB800A28AEE /* Build configuration list for PBXProject "rasterimage" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2CB4744B2A45C08D003C2653 /* Debug */,
-				2CB4744C2A45C08D003C2653 /* Release */,
+				2CAC1AC12A460EB800A28AEE /* Debug */,
+				2CAC1AC22A460EB800A28AEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2CB4744D2A45C08D003C2653 /* Build configuration list for PBXNativeTarget "rasterimage" */ = {
+		2CAC1AC32A460EB800A28AEE /* Build configuration list for PBXNativeTarget "rasterimage" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2CB4744E2A45C08D003C2653 /* Debug */,
-				2CB4744F2A45C08D003C2653 /* Release */,
+				2CAC1AC42A460EB800A28AEE /* Debug */,
+				2CAC1AC52A460EB800A28AEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 2CB4743C2A45C08D003C2653 /* Project object */;
+	rootObject = 2CAC1AB22A460EB800A28AEE /* Project object */;
 }

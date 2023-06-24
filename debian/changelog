@@ -1,3 +1,9 @@
+librasterimage (0.1.3) unstable; urgency=medium
+
+  * android: fix pom again
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 24 Jun 2023 17:15:26 +0300
+
 librasterimage (0.1.2) unstable; urgency=medium
 
   * android: fix pom

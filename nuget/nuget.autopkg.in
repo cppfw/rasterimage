@@ -31,7 +31,7 @@ nuget{
 	}
 	dependencies {
 		packages : {
-			libjpeg_static/6.1.1.13;
+			libjpeg_static/6.1.1.14;
 			libpng_static/1.4.1.14;
 			libutki/1.1.205;
 			libpapki/1.0.128;

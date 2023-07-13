@@ -150,7 +150,8 @@ r4::vector4<value_type> unpremultiply_alpha(const r4::vector4<value_type>& px)
 			divide(px.r(), px.a()),
 			divide(px.g(), px.a()),
 			divide(px.b(), px.a()),
-			px.a()};
+			px.a()
+	};
 }
 
 /**

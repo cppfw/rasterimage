@@ -242,7 +242,8 @@ public:
 	image(dimensions_type dimensions = {0, 0}) :
 		dimensioned(dimensions),
 		buffer(this->dimensions.x() * this->dimensions.y()){
-			ASSERT(!this->buffer.empty() || (this->dimensions.x() == 0 && !this->buffer.data()))}
+			ASSERT(!this->buffer.empty() || (this->dimensions.x() == 0 && !this->buffer.data()))
+		}
 
 		image(dimensions_type dimensions, pixel_type fill) :
 		image(dimensions)

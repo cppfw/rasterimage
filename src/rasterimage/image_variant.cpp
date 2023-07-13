@@ -207,7 +207,7 @@ void image_variant::write_png(const papki::file& fi) const
 				if constexpr (!std::is_same_v<value_type, uint8_t> && !std::is_same_v<value_type, uint16_t>) {
 					throw std::invalid_argument("write_png(): PNG supports only 8 bit or 16 bit per channel images");
 				}
-				return int(sizeof(value_type) * utki::num_bits_in_byte);
+				return int(sizeof(value_type) * utki::byte_bits);
 			},
 			this->variant
 		),
@@ -348,7 +348,7 @@ image_variant rasterimage::read_png(const papki::file& fi)
 	}
 
 	// convert grayscale PNG to 8bit greyscale PNG
-	if (color_format == PNG_COLOR_TYPE_GRAY && bit_depth < utki::num_bits_in_byte) {
+	if (color_format == PNG_COLOR_TYPE_GRAY && bit_depth < utki::byte_bits) {
 		png_set_expand_gray_1_2_4_to_8(png_ptr);
 	}
 
@@ -378,10 +378,10 @@ image_variant rasterimage::read_png(const papki::file& fi)
 	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_format, nullptr, nullptr, nullptr);
 
 	depth image_depth = [&bit_depth]() {
-		if (bit_depth == sizeof(uint16_t) * utki::num_bits_in_byte) {
+		if (bit_depth == sizeof(uint16_t) * utki::byte_bits) {
 			return depth::uint_16_bit;
 		} else {
-			ASSERT(bit_depth == utki::num_bits_in_byte)
+			ASSERT(bit_depth == utki::byte_bits)
 			return depth::uint_8_bit;
 		}
 	}();

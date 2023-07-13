@@ -21,7 +21,7 @@ const tst::set set("image_variant", [](tst::suite& suite) {
 				{10, 20},
 				std::get<rasterimage::format>(p),
 				std::get<rasterimage::depth>(p)
-            };
+			};
 
 			tst::check_eq(im.num_channels(), std::get<size_t>(p), SL);
 			tst::check(im.get_format() == std::get<rasterimage::format>(p), SL);
@@ -31,7 +31,7 @@ const tst::set set("image_variant", [](tst::suite& suite) {
 				{0, 0},
 				std::get<rasterimage::format>(p),
 				std::get<rasterimage::depth>(p)
-            };
+			};
 
 			tst::check_eq(empty_im.num_channels(), std::get<size_t>(p), SL);
 			tst::check(empty_im.get_format() == std::get<rasterimage::format>(p), SL);

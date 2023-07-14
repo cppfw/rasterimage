@@ -208,7 +208,7 @@ constexpr r4::vector<to_value_type, num_channels> to(const r4::vector<from_value
 		static_assert(std::is_unsigned_v<from_value_type>, "unexpected signed from_value_type");
 
 		if constexpr (std::is_floating_point_v<to_value_type>) {
-			return px.template to<to_value_type>() / to_value_type(std::numeric_limits<from_value_type>::max());
+			return to_float<to_value_type>(px);
 		} else {
 			static_assert(std::is_integral_v<to_value_type>, "unexpected non-integral to_value_type");
 			static_assert(std::is_unsigned_v<to_value_type>, "unexpected signed to_value_type");

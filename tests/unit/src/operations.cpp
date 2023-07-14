@@ -35,5 +35,20 @@ const tst::set set("operations", [](tst::suite& suite) {
 
 		tst::check_eq(pixel, r4::vector4<uint8_t>{0x1f, 0x3f, 0x7f, 0xbf}, SL) << std::hex << " pixel = 0x" << pixel;
 	});
+
+	suite.add("to_float__from_uint8_t", []() {
+		r4::vector4<uint8_t> px{0x20, 0x40, 0x80, 0xc0};
+
+		auto pixel = rasterimage::to<float>(px);
+
+		constexpr auto eps = 0.005f;
+
+		using std::abs;
+
+		tst::check_le(abs(pixel.r() - 0.125f), eps, SL);
+		tst::check_le(abs(pixel.g() - 0.25f), eps, SL);
+		tst::check_le(abs(pixel.b() - 0.5f), eps, SL);
+		tst::check_le(abs(pixel.a() - 0.75f), eps, SL);
+	});
 });
 } // namespace

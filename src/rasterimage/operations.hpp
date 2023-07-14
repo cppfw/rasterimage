@@ -44,13 +44,13 @@ namespace rasterimage {
  * @return Product of the two color values.
  */
 template <typename value_type>
-value_type multiply(value_type a, value_type b)
+constexpr value_type multiply(value_type a, value_type b)
 {
 #ifdef DEBUG
-	static const auto val_zero = value_type(0);
-	static const auto val_one = value_type(1);
+	constexpr auto val_zero = value_type(0);
+	constexpr auto val_one = value_type(1);
 #endif
-	static const auto val_max = std::numeric_limits<value_type>::max();
+	constexpr auto val_max = std::numeric_limits<value_type>::max();
 
 	if constexpr (std::is_integral_v<value_type>) {
 		static_assert(std::is_unsigned_v<value_type>, "unexpected signed integral type");
@@ -80,13 +80,13 @@ value_type multiply(value_type a, value_type b)
  * @return Result of division of first value by second value.
  */
 template <typename value_type>
-value_type divide(value_type a, value_type b)
+constexpr value_type divide(value_type a, value_type b)
 {
 #ifdef DEBUG
-	static const auto val_zero = value_type(0);
+	constexpr auto val_zero = value_type(0);
 #endif
-	static const auto val_one = value_type(1);
-	static const auto val_max = std::numeric_limits<value_type>::max();
+	constexpr auto val_one = value_type(1);
+	constexpr auto val_max = std::numeric_limits<value_type>::max();
 
 	using std::min;
 	if constexpr (std::is_integral_v<value_type>) {
@@ -119,7 +119,7 @@ value_type divide(value_type a, value_type b)
  * @return Color value.
  */
 template <typename value_type>
-value_type value(float f)
+constexpr value_type value(float f)
 {
 	if constexpr (std::is_floating_point_v<value_type>) {
 		return value_type(f);
@@ -127,7 +127,7 @@ value_type value(float f)
 		static_assert(std::is_integral_v<value_type>, "unexpected non-integral value_type");
 		static_assert(std::is_unsigned_v<value_type>, "unexpected signed integral value_type");
 
-		const auto val_max = std::numeric_limits<value_type>::max();
+		constexpr auto val_max = std::numeric_limits<value_type>::max();
 
 		return value_type(f * val_max);
 	}
@@ -139,7 +139,7 @@ value_type value(float f)
  * @return Pixel with unpremultiplied alpha.
  */
 template <typename value_type>
-r4::vector4<value_type> unpremultiply_alpha(const r4::vector4<value_type>& px)
+constexpr r4::vector4<value_type> unpremultiply_alpha(const r4::vector4<value_type>& px)
 {
 	// optimization
 	if (px.a() == value<value_type>(1) || px.a() == value<value_type>(0)) {
@@ -160,13 +160,13 @@ r4::vector4<value_type> unpremultiply_alpha(const r4::vector4<value_type>& px)
  * @return Pixel of floating point color value type.
  */
 template <typename to_value_type = float, typename from_value_type, size_t num_channels>
-r4::vector<to_value_type, num_channels> to_float(const r4::vector<from_value_type, num_channels>& px)
+constexpr r4::vector<to_value_type, num_channels> to_float(const r4::vector<from_value_type, num_channels>& px)
 {
 	static_assert(std::is_floating_point_v<to_value_type>, "unexpected non-floating point destination type");
 	static_assert(std::is_integral_v<from_value_type>, "unexpceted non-integral source type");
 	static_assert(std::is_unsigned_v<from_value_type>, "unexpected signed source type");
 
-	static const auto val_max = std::numeric_limits<from_value_type>::max();
+	constexpr auto val_max = std::numeric_limits<from_value_type>::max();
 
 	return px.template to<to_value_type>() / to_value_type(val_max);
 }
@@ -177,15 +177,79 @@ r4::vector<to_value_type, num_channels> to_float(const r4::vector<from_value_typ
  * @return Pixel of integral color value type.
  */
 template <typename to_value_type, typename from_value_type, size_t num_channels>
-r4::vector<to_value_type, num_channels> to_integral(const r4::vector<from_value_type, num_channels>& px)
+constexpr r4::vector<to_value_type, num_channels> to_integral(const r4::vector<from_value_type, num_channels>& px)
 {
 	static_assert(std::is_floating_point_v<from_value_type>, "unexpected non-floating point source type");
 	static_assert(std::is_integral_v<to_value_type>, "unexpceted non-integral destination type");
 	static_assert(std::is_unsigned_v<to_value_type>, "unexpected signed destination type");
 
-	static const auto val_max = std::numeric_limits<to_value_type>::max();
+	constexpr auto val_max = std::numeric_limits<to_value_type>::max();
 
 	return (px * val_max).template to<to_value_type>();
+}
+
+template <typename to_value_type, typename from_value_type, size_t num_channels>
+constexpr r4::vector<to_value_type, num_channels> to(const r4::vector<from_value_type, num_channels>& px)
+{
+	if constexpr (std::is_same_v<from_value_type, to_value_type>) {
+		return px;
+	}
+
+	if constexpr (std::is_floating_point_v<from_value_type>) {
+		if constexpr (std::is_floating_point_v<to_value_type>) {
+			return px.template to<to_value_type>();
+		} else {
+			static_assert(std::is_integral_v<to_value_type>, "unexpected non-integral to_value_type");
+			static_assert(std::is_unsigned_v<to_value_type>, "unexpected signed to_value_type");
+			return to_integral<to_value_type>(px);
+		}
+	} else {
+		static_assert(std::is_integral_v<from_value_type>, "unexpected non-integral from_value_type");
+		static_assert(std::is_unsigned_v<from_value_type>, "unexpected signed from_value_type");
+
+		if constexpr (std::is_floating_point_v<to_value_type>) {
+			return px.template to<to_value_type>() / to_value_type(std::numeric_limits<from_value_type>::max());
+		} else {
+			static_assert(std::is_integral_v<to_value_type>, "unexpected non-integral to_value_type");
+			static_assert(std::is_unsigned_v<to_value_type>, "unexpected signed to_value_type");
+
+			if constexpr (sizeof(from_value_type) < sizeof(to_value_type)) {
+				using calc_type = typename utki::uint_size<sizeof(to_value_type) * 2>::type;
+
+				return px.template to<to_value_type>().comp_op([](const auto& c) {
+					return to_value_type(
+						calc_type(c) * std::numeric_limits<to_value_type>::max()
+						/ std::numeric_limits<from_value_type>::max()
+					);
+				});
+			} else {
+				ASSERT(sizeof(from_value_type) > sizeof(to_value_type))
+
+				using calc_type = typename utki::uint_size<sizeof(from_value_type) * 2>::type;
+
+				return px
+					.comp_op([](const auto& c) {
+						return from_value_type(
+							calc_type(c) * std::numeric_limits<to_value_type>::max()
+							/ std::numeric_limits<from_value_type>::max()
+						);
+					})
+					.template to<to_value_type>();
+			}
+		}
+	}
+}
+
+template <typename value_type>
+uint32_t to_32bit_pixel(const r4::vector4<value_type>& px)
+{
+	const auto& p = to<uint8_t>(px);
+
+	return //
+		(uint32_t(p.a()) << (utki::byte_bits * 3)) | //
+		(uint32_t(p.b()) << (utki::byte_bits * 2)) | //
+		(uint32_t(p.g()) << utki::byte_bits) | //
+		uint32_t(p.r());
 }
 
 } // namespace rasterimage

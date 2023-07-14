@@ -240,16 +240,23 @@ constexpr r4::vector<to_value_type, num_channels> to(const r4::vector<from_value
 	}
 }
 
-template <typename value_type>
-uint32_t to_32bit_pixel(const r4::vector4<value_type>& px)
+inline uint32_t to_32bit_pixel(const r4::vector4<uint8_t>& px)
 {
-	const auto& p = to<uint8_t>(px);
-
 	return //
-		(uint32_t(p.a()) << (utki::byte_bits * 3)) | //
-		(uint32_t(p.b()) << (utki::byte_bits * 2)) | //
-		(uint32_t(p.g()) << utki::byte_bits) | //
-		uint32_t(p.r());
+		(uint32_t(px.a()) << (utki::byte_bits * 3)) | //
+		(uint32_t(px.b()) << (utki::byte_bits * 2)) | //
+		(uint32_t(px.g()) << utki::byte_bits) | //
+		uint32_t(px.r());
+}
+
+inline r4::vector4<uint8_t> from_32bit_pixel(uint32_t px)
+{
+	return {
+		uint8_t(px & utki::byte_mask),
+		uint8_t((px >> utki::byte_bits) & utki::byte_mask),
+		uint8_t((px >> utki::byte_bits * 2) & utki::byte_mask),
+		uint8_t((px >> utki::byte_bits * 3) & utki::byte_mask)
+	};
 }
 
 } // namespace rasterimage

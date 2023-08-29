@@ -1,3 +1,9 @@
+librasterimage (0.1.7) unstable; urgency=medium
+
+  * archlinux: deploy
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 29 Aug 2023 17:17:17 +0300
+
 librasterimage (0.1.6) unstable; urgency=medium
 
   * add to_32bit_pixel() and from_32bit_pixel()

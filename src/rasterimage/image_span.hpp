@@ -68,7 +68,7 @@ private:
 
 		std::conditional_t<is_const, const_value_type, non_const_value_type> line;
 
-		size_t stride;
+		size_t stride{};
 
 		iterator_internal(decltype(line) line, size_t stride) :
 			line(std::move(line)),

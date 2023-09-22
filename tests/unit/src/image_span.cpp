@@ -8,7 +8,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("clear", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -35,7 +35,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_plus_equals__difference_type", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -61,7 +61,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_minus_equals__difference_type", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -84,7 +84,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_plus__difference_type", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -110,7 +110,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_difference_type_plus_iterator", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -136,7 +136,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_minus__difference_type", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -159,7 +159,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_minus__iterator", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -175,7 +175,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_square_brackets__difference_type", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -194,7 +194,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_less_than__iterator", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -209,7 +209,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_greater_than__iterator", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -224,7 +224,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_greater_than_or_equals__iterator", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -244,7 +244,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("iterator_operator_less_than_or_equals__iterator", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -264,7 +264,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("image_operator_square_brackets__size_t", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		im.clear({10, 20, 30, 40});
 
@@ -280,7 +280,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 	suite.add("image_cbegin_cend", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
-		auto im = img.to_span();
+		auto im = img.span();
 
 		decltype(im)::pixel_type expected = {10, 20, 30, 40};
 		im.clear(expected);

@@ -26,19 +26,15 @@ SOFTWARE.
 
 #pragma once
 
-#include <r4/vector.hpp>
-#include <utki/debug.hpp>
-#include <utki/span.hpp>
-
 #include "dimensioned.hpp"
-#include "image_span.hpp"
 #include "operations.hpp"
 
-// TODO: doxygen
 namespace rasterimage {
+template <typename channel_type, size_t number_of_channels>
+class image;
 
 template <typename channel_type, size_t number_of_channels>
-class image : public dimensioned
+class image_span : public dimensioned
 {
 public:
 	static const size_t num_channels = number_of_channels;
@@ -55,12 +51,14 @@ public:
 	);
 
 private:
-	std::vector<pixel_type> buffer;
+	size_t stride;
+
+	utki::span<pixel_type> span;
 
 	template <bool is_const>
 	class iterator_internal
 	{
-		friend class image;
+		friend class image_span;
 
 	public:
 		using const_value_type = utki::span<const pixel_type>;
@@ -70,8 +68,11 @@ private:
 
 		std::conditional_t<is_const, const_value_type, non_const_value_type> line;
 
-		iterator_internal(decltype(line) line) :
-			line(std::move(line))
+		size_t stride;
+
+		iterator_internal(decltype(line) line, size_t stride) :
+			line(std::move(line)),
+			stride(stride)
 		{}
 
 	public:
@@ -119,13 +120,13 @@ private:
 
 		iterator_internal& operator++() noexcept
 		{
-			this->line = utki::make_span(this->line.data() + this->line.size(), this->line.size());
+			this->line = utki::make_span(this->line.data() + this->stride, this->line.size());
 			return *this;
 		}
 
 		iterator_internal& operator--() noexcept
 		{
-			this->line = utki::make_span(this->line.data() - this->line.size(), this->line.size());
+			this->line = utki::make_span(this->line.data() - this->stride, this->line.size());
 			return *this;
 		}
 
@@ -147,7 +148,7 @@ private:
 
 		iterator_internal& operator+=(difference_type d) noexcept
 		{
-			this->line = utki::make_span(this->line.data() + d * this->line.size(), this->line.size());
+			this->line = utki::make_span(this->line.data() + d * this->stride, this->line.size());
 
 			return *this;
 		}
@@ -180,9 +181,9 @@ private:
 		{
 			ASSERT(!this->line.empty())
 			if (this->line.data() >= i.line.data()) {
-				return (this->line.data() - i.line.data()) / this->line.size();
+				return (this->line.data() - i.line.data()) / this->stride;
 			} else {
-				return -((i.line.data() - this->line.data()) / this->line.size());
+				return -((i.line.data() - this->line.data()) / this->stride);
 			}
 		}
 
@@ -223,65 +224,39 @@ public:
 	using reverse_iterator = std::reverse_iterator<iterator>;
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-	image(dimensions_type dimensions = {0, 0}) :
-		dimensioned(dimensions),
-		buffer(this->dimensions.x() * this->dimensions.y()){
-			ASSERT(!this->buffer.empty() || (this->dimensions.x() == 0 && !this->buffer.data()))
-		}
-
-		image(dimensions_type dimensions, pixel_type fill) :
-		image(dimensions)
-	{
-		std::fill(this->pixels().begin(), this->pixels().end(), fill);
-	}
-
-	image(dimensions_type dimensions, decltype(buffer) buffer) :
-		dimensioned(dimensions),
-		buffer(std::move(buffer)){ASSERT(
-			this->dims().x() * this->dims().y() == this->pixels().size(),
-			[this](auto& o) {
-				o << "rasterimage::image::image(dims, buffer): dimensions do not match with pixels array size"
-				  << "\n";
-				o << "\t"
-				  << "dims = " << this->dims() << ", pixels().size() = " << this->pixels().size();
-			}
-		)}
-
-		image_span<channel_type, number_of_channels> to_span() noexcept
-	{
-		return *this;
-	}
-
-	image_span<const channel_type, number_of_channels> to_span() const noexcept
-	{
-		return *this;
-	}
+	image_span(image<channel_type, number_of_channels>& img);
 
 	bool empty() const noexcept
 	{
-		return this->buffer.empty();
+		return this->span.empty();
 	}
 
 	iterator begin() noexcept
 	{
-		return iterator(utki::make_span(this->buffer.data(), this->dimensions.x()));
+		return iterator(utki::make_span(this->span.data(), this->dimensions.x()), this->stride);
 	}
 
 	iterator end() noexcept
 	{
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-		return iterator(utki::make_span(this->buffer.data() + this->dimensions.x() * this->dimensions.y(), 0));
+		return iterator(
+			utki::make_span(this->span.data() + this->stride * this->dimensions.y(), this->dimensions.x()),
+			this->stride
+		);
 	}
 
 	const_iterator cbegin() const noexcept
 	{
-		return const_iterator(utki::make_span(this->buffer.data(), this->dimensions.x()));
+		return const_iterator(utki::make_span(this->span.data(), this->dimensions.x()), this->stride);
 	}
 
 	const_iterator cend() const noexcept
 	{
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-		return const_iterator(utki::make_span(this->buffer.data() + this->dimensions.x() * this->dimensions.y(), 0));
+		return const_iterator(
+			utki::make_span(this->span.data() + this->stride * this->dimensions.y(), this->dimensions.x()),
+			this->stride
+		);
 	}
 
 	const_reverse_iterator crbegin() const
@@ -302,16 +277,6 @@ public:
 	reverse_iterator rend()
 	{
 		return reverse_iterator(this->begin());
-	}
-
-	utki::span<pixel_type> pixels() noexcept
-	{
-		return this->buffer;
-	}
-
-	utki::span<const pixel_type> pixels() const noexcept
-	{
-		return this->buffer;
 	}
 
 	utki::span<pixel_type> operator[](uint32_t line_index) noexcept
@@ -336,56 +301,20 @@ public:
 	void swap_red_blue() noexcept
 	{
 		using std::swap;
-		for (auto& p : this->pixels()) {
-			swap(p.r(), p.b());
+		for (auto l : *this) {
+			for (auto& p : l) {
+				swap(p.r(), p.b());
+			}
 		}
 	}
 
 	void unpremultiply_alpha() noexcept
 	{
-		for (auto& p : this->pixels()) {
-			p = rasterimage::unpremultiply_alpha(p);
+		for (auto l : *this) {
+			for (auto& p : l) {
+				p = rasterimage::unpremultiply_alpha(p);
+			}
 		}
-	}
-
-	static image make(dimensions_type dims, const value_type* data, size_t stride_in_values = 0)
-	{
-		if (stride_in_values == 0) {
-			stride_in_values = dims.x() * num_channels;
-		}
-
-		image im(dims);
-
-		auto src_row = data;
-
-		for (auto row : im) {
-			auto num_values_per_row = im.dims().x() * num_channels;
-			ASSERT(row.size() * num_channels == num_values_per_row)
-			std::copy( //
-				src_row,
-				src_row + num_values_per_row,
-				// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-				reinterpret_cast<value_type*>(row.data())
-			);
-			src_row += stride_in_values;
-		}
-
-		ASSERT(src_row == data + stride_in_values * im.dims().y())
-
-		return im;
-	}
-
-	constexpr static value_type value(float f)
-	{
-		return rasterimage::value<value_type>(f);
 	}
 };
-
-template <typename channel_type, size_t number_of_channels>
-image_span<channel_type, number_of_channels>::image_span(image<channel_type, number_of_channels>& im) :
-	dimensioned(im.dims()),
-	stride(im.dims().x()),
-	span(im[0])
-{}
-
 } // namespace rasterimage

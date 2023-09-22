@@ -296,5 +296,18 @@ const tst::set set("image_span", [](tst::suite& suite) {
 
 		tst::check(b == e, SL);
 	});
+
+	suite.add("subspan__rectangle", []() {
+		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
+
+		auto im = img.span();
+
+		decltype(im)::pixel_type expected = {10, 20, 30, 40};
+		im.clear(expected);
+
+		auto subim = im.subspan({1, 2, 2, 3});
+
+		subim.clear(0);
+	});
 });
 } // namespace

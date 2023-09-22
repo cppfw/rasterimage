@@ -26,6 +26,8 @@ SOFTWARE.
 
 #pragma once
 
+#include <r4/rectangle.hpp>
+
 #include "dimensioned.hpp"
 #include "operations.hpp"
 
@@ -218,6 +220,12 @@ private:
 		}
 	};
 
+	image_span(dimensions_type dimsensions, utki::span<pixel_type> span, size_t stride) :
+		dimensioned(dimensions),
+		span(span),
+		stride(stride)
+	{}
+
 public:
 	using iterator = iterator_internal<false>;
 	using const_iterator = iterator_internal<true>;
@@ -287,6 +295,13 @@ public:
 	utki::span<const pixel_type> operator[](uint32_t line_index) const noexcept
 	{
 		return *utki::next(this->begin(), line_index);
+	}
+
+	image_span subspan(r4::rectangle<uint32_t> rect)
+	{
+		rect.intersect(r4::rectangle<uint32_t>({0, 0}, this->dims()));
+
+		return image_span(rect.d, this->span.subspan(rect.p.y() * this->stride + rect.p.x()), this->stride);
 	}
 
 	void clear(pixel_type val)

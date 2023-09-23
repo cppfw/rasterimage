@@ -55,7 +55,7 @@ public:
 private:
 	size_t stride;
 
-	utki::span<pixel_type> span;
+	pixel_type* buffer = nullptr;
 
 	template <bool is_const>
 	class iterator_internal
@@ -182,6 +182,7 @@ private:
 		difference_type operator-(const iterator_internal& i) const noexcept
 		{
 			ASSERT(!this->line.empty())
+			ASSERT(this->stride == i.stride)
 			if (this->line.data() >= i.line.data()) {
 				return (this->line.data() - i.line.data()) / this->stride;
 			} else {
@@ -220,10 +221,10 @@ private:
 		}
 	};
 
-	image_span(dimensions_type dimsensions, utki::span<pixel_type> span, size_t stride) :
+	image_span(dimensions_type dimensions, size_t stride, pixel_type* buffer) :
 		dimensioned(dimensions),
-		span(span),
-		stride(stride)
+		stride(stride),
+		buffer(buffer)
 	{}
 
 public:
@@ -236,35 +237,27 @@ public:
 
 	bool empty() const noexcept
 	{
-		return this->span.empty();
+		return this->buffer == nullptr;
 	}
 
 	iterator begin() noexcept
 	{
-		return iterator(utki::make_span(this->span.data(), this->dimensions.x()), this->stride);
+		return iterator(utki::make_span(this->buffer, this->dims().x()), this->stride);
 	}
 
 	iterator end() noexcept
 	{
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-		return iterator(
-			utki::make_span(this->span.data() + this->stride * this->dimensions.y(), this->dimensions.x()),
-			this->stride
-		);
+		return utki::next(this->begin(), this->dims().y());
 	}
 
 	const_iterator cbegin() const noexcept
 	{
-		return const_iterator(utki::make_span(this->span.data(), this->dimensions.x()), this->stride);
+		return const_iterator(utki::make_span(this->buffer, this->dims().x()), this->stride);
 	}
 
 	const_iterator cend() const noexcept
 	{
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-		return const_iterator(
-			utki::make_span(this->span.data() + this->stride * this->dimensions.y(), this->dimensions.x()),
-			this->stride
-		);
+		return utki::next(this->cbegin(), this->dims().y());
 	}
 
 	const_reverse_iterator crbegin() const
@@ -301,7 +294,13 @@ public:
 	{
 		rect.intersect(r4::rectangle<uint32_t>({0, 0}, this->dims()));
 
-		return image_span(rect.d, this->span.subspan(rect.p.y() * this->stride + rect.p.x()), this->stride);
+		image_span ret( //
+			rect.d,
+			this->stride,
+			&(*this)[rect.p.y()][rect.p.x()]
+		);
+
+		return ret;
 	}
 
 	void clear(pixel_type val)

@@ -225,8 +225,8 @@ public:
 
 	image(dimensions_type dimensions = {0, 0}) :
 		dimensioned(dimensions),
-		buffer(this->dimensions.x() * this->dimensions.y()){
-			ASSERT(!this->buffer.empty() || (this->dimensions.x() == 0 && !this->buffer.data()))
+		buffer(this->dims().x() * this->dims().y()){
+			ASSERT(!this->buffer.empty() || (this->dims().x() == 0 && !this->buffer.data()))
 		}
 
 		image(dimensions_type dimensions, pixel_type fill) :
@@ -382,7 +382,7 @@ template <typename channel_type, size_t number_of_channels>
 image_span<channel_type, number_of_channels>::image_span(image<channel_type, number_of_channels>& im) :
 	dimensioned(im.dims()),
 	stride(im.dims().x()),
-	span(im[0])
+	buffer(&im.pixels().front())
 {}
 
 } // namespace rasterimage

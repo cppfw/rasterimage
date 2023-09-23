@@ -302,12 +302,33 @@ const tst::set set("image_span", [](tst::suite& suite) {
 
 		auto im = img.span();
 
-		decltype(im)::pixel_type expected = {10, 20, 30, 40};
-		im.clear(expected);
+		decltype(im)::pixel_type expected1 = {10, 20, 30, 40};
+		im.clear(expected1);
 
 		auto subim = im.subspan({1, 2, 2, 3});
 
-		subim.clear(0);
+		decltype(im)::pixel_type expected2(0);
+		subim.clear(expected2);
+
+		tst::check_eq(im[1][0], expected1, SL);
+		tst::check_eq(im[1][1], expected1, SL);
+		tst::check_eq(im[1][2], expected1, SL);
+		tst::check_eq(im[1][3], expected1, SL);
+
+		tst::check_eq(im[2][0], expected1, SL);
+		tst::check_eq(im[2][1], expected2, SL);
+		tst::check_eq(im[2][2], expected2, SL);
+		tst::check_eq(im[2][3], expected1, SL);
+
+		tst::check_eq(im[4][0], expected1, SL);
+		tst::check_eq(im[4][1], expected2, SL);
+		tst::check_eq(im[4][2], expected2, SL);
+		tst::check_eq(im[4][3], expected1, SL);
+
+		tst::check_eq(im[5][0], expected1, SL);
+		tst::check_eq(im[5][1], expected1, SL);
+		tst::check_eq(im[5][2], expected1, SL);
+		tst::check_eq(im[5][3], expected1, SL);
 	});
 });
 } // namespace

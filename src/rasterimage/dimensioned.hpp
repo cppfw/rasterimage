@@ -34,6 +34,7 @@ class dimensioned
 public:
 	using dimensions_type = r4::vector2<uint32_t>;
 
+private:
 	dimensions_type dimensions;
 
 public:

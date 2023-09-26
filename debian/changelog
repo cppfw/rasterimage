@@ -1,3 +1,9 @@
+librasterimage (0.1.8) unstable; urgency=medium
+
+  * add image_span
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 26 Sep 2023 13:53:20 +0300
+
 librasterimage (0.1.7) unstable; urgency=medium
 
   * archlinux: deploy

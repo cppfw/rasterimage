@@ -436,8 +436,8 @@ image_variant rasterimage::read_png(const papki::file& fi)
 #ifdef DEBUG
 						&image,
 #endif
-						i = image.begin()]() mutable {
-						ASSERT(i != image.end())
+						i = image.span().begin()]() mutable {
+						ASSERT(i != image.span().end())
 						auto ret = i->data();
 						++i;
 						// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
@@ -634,7 +634,7 @@ image_variant rasterimage::read_jpeg(const papki::file& fi)
 			using depth_type = typename image_type::pixel_type::value_type;
 			ASSERT(std::is_same_v<depth_type, uint8_t>)
 #endif
-			auto i = image.begin();
+			auto i = image.span().begin();
 			for (int y = 0; cinfo.output_scanline < image.dims().y(); ++y, ++i) {
 				// read the string into buffer
 				jpeg_read_scanlines(&cinfo, buffer, 1);

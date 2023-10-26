@@ -1,3 +1,9 @@
+librasterimage (0.1.9) unstable; urgency=medium
+
+  * add get_rgba() and get_alpha()
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 26 Oct 2023 15:25:40 +0300
+
 librasterimage (0.1.8) unstable; urgency=medium
 
   * add image_span

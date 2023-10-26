@@ -62,5 +62,41 @@ const tst::set set("operations", [](tst::suite& suite) {
 		tst::check_eq(rasterimage::get_rgba(rgb), r4::vector4<uint8_t>{0x20, 0x30, 0x40, 0xff}, SL);
 		tst::check_eq(rasterimage::get_rgba(rgba), r4::vector4<uint8_t>{0x20, 0x30, 0x40, 0x50}, SL);
 	});
+
+	suite.add("get_rgba__from_float", []() {
+		r4::vector<float, 1> g = {0.1f};
+		r4::vector2<float> ga = {0.1f, 0.2f};
+		r4::vector3<float> rgb = {0.1f, 0.2f, 0.3f};
+		r4::vector4<float> rgba = {0.1f, 0.2f, 0.3f, 0.4f};
+
+		tst::check_eq(rasterimage::get_rgba(g), r4::vector4<float>{0.1f, 0.1f, 0.1, 1}, SL);
+		tst::check_eq(rasterimage::get_rgba(ga), r4::vector4<float>{0.1f, 0.1f, 0.1f, 0.2f}, SL);
+		tst::check_eq(rasterimage::get_rgba(rgb), r4::vector4<float>{0.1f, 0.2f, 0.3f, 1}, SL);
+		tst::check_eq(rasterimage::get_rgba(rgba), r4::vector4<float>{0.1f, 0.2f, 0.3f, 0.4f}, SL);
+	});
+
+	suite.add("get_alpha__from_uint8_t", []() {
+		r4::vector<uint8_t, 1> g = 0x20;
+		r4::vector2<uint8_t> ga = {0x20, 0x30};
+		r4::vector3<uint8_t> rgb = {0x20, 0x30, 0x40};
+		r4::vector4<uint8_t> rgba = {0x20, 0x30, 0x40, 0x50};
+
+		tst::check_eq(rasterimage::get_alpha(g), uint8_t(0x20), SL);
+		tst::check_eq(rasterimage::get_alpha(ga), uint8_t(0x30), SL);
+		tst::check_eq(rasterimage::get_alpha(rgb), uint8_t(0xff), SL);
+		tst::check_eq(rasterimage::get_alpha(rgba), uint8_t(0x50), SL);
+	});
+
+	suite.add("get_alpha__from_float", []() {
+		r4::vector<float, 1> a = {0.1f};
+		r4::vector2<float> ga = {0.1f, 0.2f};
+		r4::vector3<float> rgb = {0.1f, 0.2f, 0.3f};
+		r4::vector4<float> rgba = {0.1f, 0.2f, 0.3f, 0.4f};
+
+		tst::check_eq(rasterimage::get_alpha(a), 0.1f, SL);
+		tst::check_eq(rasterimage::get_alpha(ga), 0.2f, SL);
+		tst::check_eq(rasterimage::get_alpha(rgb), 1.0f, SL);
+		tst::check_eq(rasterimage::get_alpha(rgba), 0.4f, SL);
+	});
 });
 } // namespace

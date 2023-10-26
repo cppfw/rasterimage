@@ -274,4 +274,19 @@ inline r4::vector4<value_type> get_rgba(const r4::vector<value_type, num_channel
 	}
 }
 
+template <typename value_type, size_t num_channels>
+inline value_type get_alpha(const r4::vector<value_type, num_channels>& px)
+{
+	static_assert(1 <= num_channels && num_channels <= 4, "num_channels must be from [1:4] range");
+	if constexpr (num_channels == 1) {
+		return px[0];
+	} else if constexpr (num_channels == 2) {
+		return px[1];
+	} else if constexpr (num_channels == 3) {
+		return value<value_type>(1);
+	} else if constexpr (num_channels == 4) {
+		return px.a();
+	}
+}
+
 } // namespace rasterimage

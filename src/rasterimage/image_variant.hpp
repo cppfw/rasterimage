@@ -121,8 +121,7 @@ public:
 					return sfi.num_channels;
 				},
 				this->variant
-			)
-			== ret
+			) == ret
 		)
 		return ret;
 	}
@@ -136,8 +135,7 @@ public:
 					return sfi.num_channels - 1;
 				},
 				this->variant
-			))
-			== ret
+			)) == ret
 		)
 		return ret;
 	}

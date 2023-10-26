@@ -218,8 +218,8 @@ constexpr r4::vector<to_value_type, num_channels> to(const r4::vector<from_value
 
 				return px.template to<to_value_type>().comp_op([](const auto& c) {
 					return to_value_type(
-						calc_type(c) * std::numeric_limits<to_value_type>::max()
-						/ std::numeric_limits<from_value_type>::max()
+						calc_type(c) * std::numeric_limits<to_value_type>::max() /
+						std::numeric_limits<from_value_type>::max()
 					);
 				});
 			} else {
@@ -230,8 +230,8 @@ constexpr r4::vector<to_value_type, num_channels> to(const r4::vector<from_value
 				return px
 					.comp_op([](const auto& c) {
 						return from_value_type(
-							calc_type(c) * std::numeric_limits<to_value_type>::max()
-							/ std::numeric_limits<from_value_type>::max()
+							calc_type(c) * std::numeric_limits<to_value_type>::max() /
+							std::numeric_limits<from_value_type>::max()
 						);
 					})
 					.template to<to_value_type>();

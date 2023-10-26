@@ -50,5 +50,17 @@ const tst::set set("operations", [](tst::suite& suite) {
 		tst::check_le(abs(pixel.b() - 0.5f), eps, SL);
 		tst::check_le(abs(pixel.a() - 0.75f), eps, SL);
 	});
+
+	suite.add("get_rgba__from_uint8_t", []() {
+		r4::vector<uint8_t, 1> g = 0x20;
+		r4::vector2<uint8_t> ga = {0x20, 0x30};
+		r4::vector3<uint8_t> rgb = {0x20, 0x30, 0x40};
+		r4::vector4<uint8_t> rgba = {0x20, 0x30, 0x40, 0x50};
+
+		tst::check_eq(rasterimage::get_rgba(g), r4::vector4<uint8_t>{0x20, 0x20, 0x20, 0xff}, SL);
+		tst::check_eq(rasterimage::get_rgba(ga), r4::vector4<uint8_t>{0x20, 0x20, 0x20, 0x30}, SL);
+		tst::check_eq(rasterimage::get_rgba(rgb), r4::vector4<uint8_t>{0x20, 0x30, 0x40, 0xff}, SL);
+		tst::check_eq(rasterimage::get_rgba(rgba), r4::vector4<uint8_t>{0x20, 0x30, 0x40, 0x50}, SL);
+	});
 });
 } // namespace

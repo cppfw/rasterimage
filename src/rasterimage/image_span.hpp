@@ -292,7 +292,9 @@ public:
 
 	image_span subspan(r4::rectangle<uint32_t> rect)
 	{
-		rect.intersect(r4::rectangle<uint32_t>({0, 0}, this->dims()));
+		ASSERT(r4::rectangle<uint32_t>({0, 0}, this->dims()).contains(rect), [&](auto& o) {
+			o << "requested subspan is out of the span, this->dims() = " << this->dims() << ", rect = " << rect;
+		})
 
 		image_span ret( //
 			rect.d,

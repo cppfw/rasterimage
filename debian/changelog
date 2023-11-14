@@ -1,3 +1,9 @@
+librasterimage (0.1.11) unstable; urgency=medium
+
+  * fix image::make()
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 14 Nov 2023 16:15:15 +0200
+
 librasterimage (0.1.10) unstable; urgency=medium
 
   * assert

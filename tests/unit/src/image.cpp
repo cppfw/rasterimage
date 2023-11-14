@@ -18,11 +18,11 @@ const tst::set set("image", [](tst::suite& suite) {
 	});
 
 	suite.add("make", []() {
-		std::array<uint8_t, 4> data = {1, 2, 3, 4};
+		std::array<uint32_t, 4> data = {1, 2, 3, 4};
 
 		constexpr auto stride = 2;
 
-		auto im = rasterimage::image<uint8_t, 1>::make( //
+		auto im = rasterimage::image<uint32_t, 1>::make( //
 			{2, 2},
 			data.data(),
 			stride

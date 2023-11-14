@@ -123,10 +123,11 @@ public:
 
 		image im(dims);
 
+		auto num_values_per_row = im.dims().x() * num_channels;
+
 		auto src_row = data;
 
 		for (auto row : im.span()) {
-			auto num_values_per_row = im.dims().x() * num_channels;
 			ASSERT(row.size() * num_channels == num_values_per_row)
 			std::copy( //
 				src_row,

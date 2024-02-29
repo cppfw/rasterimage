@@ -128,7 +128,7 @@ public:
 
 	format get_format() const noexcept
 	{
-		auto ret = format(this->variant.index() % size_t(format::enum_size));
+		auto ret = format(this->variant.index() % size_t(rasterimage::format::enum_size));
 		ASSERT(
 			format(std::visit(
 				[](const auto& sfi) {
@@ -142,7 +142,7 @@ public:
 
 	depth get_depth() const noexcept
 	{
-		return depth(this->variant.index() / size_t(format::enum_size));
+		return depth(this->variant.index() / size_t(rasterimage::format::enum_size));
 	}
 
 	const dimensioned::dimensions_type& dims() const noexcept;

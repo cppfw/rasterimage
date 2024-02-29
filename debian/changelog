@@ -1,3 +1,9 @@
+librasterimage (0.1.12) unstable; urgency=medium
+
+  * aptian
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 29 Feb 2024 17:23:00 +0200
+
 librasterimage (0.1.11) unstable; urgency=medium
 
   * fix image::make()

@@ -10,7 +10,7 @@ this_srcs := $(call prorab-src-dir, src)
 
 this_lib_raster_image := ../../src/out/$(c)/librasterimage$(dot_so)
 
-this_cxxflags += -I ../../src
+this_cxxflags += -isystem ../../src
 this_ldlibs += $(this_lib_raster_image)
 this_ldlibs += -ltst -lutki
 

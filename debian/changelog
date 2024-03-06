@@ -1,3 +1,9 @@
+librasterimage (0.1.13) unstable; urgency=medium
+
+  * bookworm
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 06 Mar 2024 22:05:23 +0200
+
 librasterimage (0.1.12) unstable; urgency=medium
 
   * aptian

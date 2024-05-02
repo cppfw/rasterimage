@@ -330,5 +330,27 @@ const tst::set set("image_span", [](tst::suite& suite) {
 		tst::check_eq(im[5][2], expected1, SL);
 		tst::check_eq(im[5][3], expected1, SL);
 	});
+
+	suite.add<unsigned>("flip_vertical", {1, 2, 3, 4, 5, 10, 13}, [](const auto& p) {
+		rasterimage::image<int, 4> img(rasterimage::dimensioned::dimensions_type{2, p});
+
+		auto im = img.span();
+		for (size_t i = 0; i != im.dims().y(); ++i) {
+			int c = i * 10;
+			im[i][0] = {c, c + 1, c + 2, c + 3};
+			im[i][1] = {c, c + 4, c + 5, c + 6};
+		}
+
+		im.flip_vertical();
+
+		for (size_t i = 0; i != im.dims().y(); ++i) {
+			int c = (im.dims().y() - i - 1) * 10;
+			decltype(im)::pixel_type expected0 = {c, c + 1, c + 2, c + 3};
+			decltype(im)::pixel_type expected1 = {c, c + 4, c + 5, c + 6};
+
+			tst::check_eq(im[i][0], expected0, SL);
+			tst::check_eq(im[i][1], expected1, SL);
+		}
+	});
 });
 } // namespace

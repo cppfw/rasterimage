@@ -335,7 +335,16 @@ public:
 
 	void flip_vertical() noexcept
 	{
-		// TODO:
+		// NOTE: the std::prev(this->end()) cannot be used here because iterator_category is std::input_iterator_tag,
+		//       while std::prev() requires at least std::bidirectional_iterator_tag.
+		for (auto upper = this->begin(), lower = --this->end(); upper < lower; ++upper, --lower) {
+			ASSERT(upper->size() == lower->size())
+
+			for (auto u = upper->begin(), l = lower->begin(); u != upper->end(); ++u, ++l) {
+				using std::swap;
+				swap(*u, *l);
+			}
+		}
 	}
 };
 } // namespace rasterimage

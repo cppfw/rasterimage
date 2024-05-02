@@ -332,5 +332,10 @@ public:
 			}
 		}
 	}
+
+	void flip_vertical() noexcept
+	{
+		// TODO:
+	}
 };
 } // namespace rasterimage

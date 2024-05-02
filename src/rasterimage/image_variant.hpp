@@ -151,7 +151,7 @@ public:
 
 	/**
 	 * @brief Get buffer size.
-	 * @return Size of the underlying image buffer, in pixels.
+	 * @return Size of the underlying image buffer in pixels.
 	 */
 	size_t buffer_size() const noexcept;
 

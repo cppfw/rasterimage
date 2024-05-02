@@ -336,7 +336,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 
 		auto im = img.span();
 		for (size_t i = 0; i != im.dims().y(); ++i) {
-			int c = i * 10;
+			int c = int(i * 10);
 			im[i][0] = {c, c + 1, c + 2, c + 3};
 			im[i][1] = {c, c + 4, c + 5, c + 6};
 		}
@@ -344,7 +344,7 @@ const tst::set set("image_span", [](tst::suite& suite) {
 		im.flip_vertical();
 
 		for (size_t i = 0; i != im.dims().y(); ++i) {
-			int c = (im.dims().y() - i - 1) * 10;
+			int c = int(im.dims().y() - i - 1) * 10;
 			decltype(im)::pixel_type expected0 = {c, c + 1, c + 2, c + 3};
 			decltype(im)::pixel_type expected1 = {c, c + 4, c + 5, c + 6};
 

@@ -142,7 +142,9 @@ public:
 
 	depth get_depth() const noexcept
 	{
-		return depth(this->variant.index() / size_t(rasterimage::format::enum_size));
+		auto v = this->variant.index() / size_t(rasterimage::format::enum_size);
+		ASSERT(v < size_t(depth::enum_size))
+		return depth(v);
 	}
 
 	const dimensioned::dimensions_type& dims() const noexcept;

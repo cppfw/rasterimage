@@ -46,7 +46,7 @@ nuget{
 		};
 
 		//==== v141 tools ====
-		/*
+/*
 		[x86,v141,release] {
 			lib: ..\msvs_solution\v141_Release\librasterimage.lib;
 		}
@@ -59,7 +59,7 @@ nuget{
 		[x64,v141,debug] {
 			lib: ..\msvs_solution\x64\v141_Debug\librasterimage.lib;
 		}
-		*/
+*/
 
 		//==== v142 tools ====
 

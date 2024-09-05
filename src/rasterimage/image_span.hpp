@@ -296,11 +296,12 @@ public:
 			o << "requested subspan is out of the span, this->dims() = " << this->dims() << ", rect = " << rect;
 		})
 
-		image_span ret( //
-			rect.d,
-			this->stride,
-			&(*this)[rect.p.y()][rect.p.x()]
-		);
+		image_span
+			ret( //
+				rect.d,
+				this->stride,
+				&(*this)[rect.p.y()][rect.p.x()]
+			);
 
 		return ret;
 	}

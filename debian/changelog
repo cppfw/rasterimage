@@ -1,3 +1,9 @@
+librasterimage (0.1.18) unstable; urgency=medium
+
+  * add image_span::data() and stride accessors
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 30 Oct 2024 14:32:20 +0200
+
 librasterimage (0.1.17) unstable; urgency=medium
 
   * ubuntu noble

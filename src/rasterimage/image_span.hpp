@@ -53,7 +53,7 @@ public:
 	);
 
 private:
-	size_t stride;
+	size_t stride_px;
 
 	pixel_type* buffer = nullptr;
 
@@ -70,11 +70,14 @@ private:
 
 		std::conditional_t<is_const, const_value_type, non_const_value_type> line;
 
-		size_t stride{};
+		size_t stride_px{};
 
-		iterator_internal(decltype(line) line, size_t stride) :
+		iterator_internal(
+			decltype(line) line, //
+			size_t stride_px
+		) :
 			line(std::move(line)),
-			stride(stride)
+			stride_px(stride_px)
 		{}
 
 	public:
@@ -122,13 +125,13 @@ private:
 
 		iterator_internal& operator++() noexcept
 		{
-			this->line = utki::make_span(this->line.data() + this->stride, this->line.size());
+			this->line = utki::make_span(this->line.data() + this->stride_px, this->line.size());
 			return *this;
 		}
 
 		iterator_internal& operator--() noexcept
 		{
-			this->line = utki::make_span(this->line.data() - this->stride, this->line.size());
+			this->line = utki::make_span(this->line.data() - this->stride_px, this->line.size());
 			return *this;
 		}
 
@@ -150,7 +153,7 @@ private:
 
 		iterator_internal& operator+=(difference_type d) noexcept
 		{
-			this->line = utki::make_span(this->line.data() + d * this->stride, this->line.size());
+			this->line = utki::make_span(this->line.data() + d * this->stride_px, this->line.size());
 
 			return *this;
 		}
@@ -182,11 +185,11 @@ private:
 		difference_type operator-(const iterator_internal& i) const noexcept
 		{
 			ASSERT(!this->line.empty())
-			ASSERT(this->stride == i.stride)
+			ASSERT(this->stride_px == i.stride_px)
 			if (this->line.data() >= i.line.data()) {
-				return (this->line.data() - i.line.data()) / this->stride;
+				return (this->line.data() - i.line.data()) / this->stride_px;
 			} else {
-				return -((i.line.data() - this->line.data()) / this->stride);
+				return -((i.line.data() - this->line.data()) / this->stride_px);
 			}
 		}
 
@@ -221,9 +224,13 @@ private:
 		}
 	};
 
-	image_span(dimensions_type dimensions, size_t stride, pixel_type* buffer) :
+	image_span(
+		dimensions_type dimensions, //
+		size_t stride_px,
+		pixel_type* buffer
+	) :
 		dimensioned(dimensions),
-		stride(stride),
+		stride_px(stride_px),
 		buffer(buffer)
 	{}
 
@@ -235,6 +242,26 @@ public:
 
 	image_span(image<channel_type, number_of_channels>& img);
 
+	pixel_type* data()
+	{
+		return this->buffer;
+	}
+
+	const pixel_type* data() const
+	{
+		return this->buffer;
+	}
+
+	unsigned stride_pixels() const
+	{
+		return this->stride_px;
+	}
+
+	size_t stride_bytes() const
+	{
+		return this->stride_pixels() * sizeof(pixel_type);
+	}
+
 	bool empty() const noexcept
 	{
 		return this->buffer == nullptr;
@@ -242,7 +269,7 @@ public:
 
 	iterator begin() noexcept
 	{
-		return iterator(utki::make_span(this->buffer, this->dims().x()), this->stride);
+		return iterator(utki::make_span(this->buffer, this->dims().x()), this->stride_px);
 	}
 
 	iterator end() noexcept
@@ -252,7 +279,7 @@ public:
 
 	const_iterator cbegin() const noexcept
 	{
-		return const_iterator(utki::make_span(this->buffer, this->dims().x()), this->stride);
+		return const_iterator(utki::make_span(this->buffer, this->dims().x()), this->stride_px);
 	}
 
 	const_iterator cend() const noexcept
@@ -299,7 +326,7 @@ public:
 		image_span
 			ret( //
 				rect.d,
-				this->stride,
+				this->stride_px,
 				&(*this)[rect.p.y()][rect.p.x()]
 			);
 

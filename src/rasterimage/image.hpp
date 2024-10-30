@@ -156,7 +156,7 @@ public:
 template <typename channel_type, size_t number_of_channels>
 image_span<channel_type, number_of_channels>::image_span(image<channel_type, number_of_channels>& im) :
 	dimensioned(im.dims()),
-	stride(im.dims().x()),
+	stride_px(im.dims().x()),
 	buffer(&im.pixels().front())
 {}
 

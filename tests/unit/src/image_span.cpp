@@ -297,6 +297,38 @@ const tst::set set("image_span", [](tst::suite& suite) {
 		tst::check(b == e, SL);
 	});
 
+	suite.add("data", []() {
+		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
+
+		auto im = img.span();
+		im.clear(0);
+
+		decltype(im)::pixel_type expected1 = {10, 20, 30, 40};
+		decltype(im)::pixel_type expected2 = {1, 2, 3, 4};
+
+		auto subim = im.subspan({1, 2, 2, 3});
+		subim.clear(expected1);
+
+		*subim.data() = expected2;
+		*(subim.data() + 2) = expected2;
+
+		tst::check_eq(img[2][1], expected2, SL);
+		tst::check_eq(img[2][2], expected1, SL);
+		tst::check_eq(img[2][3], expected2, SL);
+	});
+
+	suite.add("stride", []() {
+		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
+
+		auto im = img.span();
+		auto subim = im.subspan({1, 2, 2, 3});
+
+		tst::check_eq(im.stride_pixels(), unsigned(100), SL);
+		tst::check_eq(im.stride_bytes(), 100 * sizeof(decltype(img)::pixel_type), SL);
+		tst::check_eq(subim.stride_pixels(), im.stride_pixels(), SL);
+		tst::check_eq(subim.stride_bytes(), im.stride_bytes(), SL);
+	});
+
 	suite.add("subspan__rectangle", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 

@@ -309,8 +309,8 @@ const tst::set set("image_span", [](tst::suite& suite) {
 		auto subim = im.subspan({1, 2, 2, 3});
 		subim.clear(expected1);
 
-		*subim.data() = expected2;
-		*(subim.data() + 2) = expected2;
+		subim.data()[0] = expected2; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+		subim.data()[2] = expected2; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
 		tst::check_eq(img[2][1], expected2, SL);
 		tst::check_eq(img[2][2], expected1, SL);

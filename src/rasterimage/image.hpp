@@ -58,19 +58,28 @@ private:
 	std::vector<pixel_type> buffer;
 
 public:
-	image(dimensions_type dimensions = {0, 0}) :
-		dimensioned(dimensions),
-		buffer(this->dims().x() * this->dims().y()){
-			ASSERT(!this->buffer.empty() || (this->dims().x() == 0 && !this->buffer.data()))
-		}
+	image() :
+		image(dimensions_type{0, 0})
+	{}
 
-		image(dimensions_type dimensions, pixel_type fill) :
+	image(dimensions_type dimensions) :
+		dimensioned(dimensions),
+		buffer(dimensions.x() * dimensions.y())
+	{}
+
+	image(
+		dimensions_type dimensions, //
+		pixel_type fill
+	) :
 		image(dimensions)
 	{
 		std::fill(this->pixels().begin(), this->pixels().end(), fill);
 	}
 
-	image(dimensions_type dimensions, decltype(buffer) buffer) :
+	image(
+		dimensions_type dimensions, //
+		decltype(buffer) buffer
+	) :
 		dimensioned(dimensions),
 		buffer(std::move(buffer)){ASSERT(
 			this->dims().x() * this->dims().y() == this->pixels().size(),

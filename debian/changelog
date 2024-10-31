@@ -1,3 +1,9 @@
+librasterimage (0.1.19) unstable; urgency=medium
+
+  * const_image_span
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 31 Oct 2024 14:43:58 +0200
+
 librasterimage (0.1.18) unstable; urgency=medium
 
   * add image_span::data() and stride accessors

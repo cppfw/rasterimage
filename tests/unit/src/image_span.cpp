@@ -297,6 +297,17 @@ const tst::set set("image_span", [](tst::suite& suite) {
 		tst::check(b == e, SL);
 	});
 
+	suite.add("conversion_to_const_image_span", []() {
+		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
+
+		auto im = img.span();
+		im.clear(0);
+
+		decltype(im)::const_image_span_type cim = im;
+
+		tst::check_eq(cim[0][0], decltype(cim)::pixel_type{0, 0, 0, 0}, SL);
+	});
+
 	suite.add("data", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 

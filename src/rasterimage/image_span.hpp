@@ -46,7 +46,11 @@ class image_span : public dimensioned
 public:
 	static const size_t num_channels = number_of_channels;
 
-	using pixel_type = r4::vector<channel_type, num_channels>;
+	using const_image_span_type = image_span<channel_type, num_channels, true>;
+	using pixel_type = std::conditional_t<
+		is_const_span, //
+		const r4::vector<channel_type, num_channels>,
+		r4::vector<channel_type, num_channels>>;
 	using value_type = typename pixel_type::value_type;
 
 	static_assert(sizeof(pixel_type) == sizeof(channel_type) * number_of_channels, "pixel_type has padding");
@@ -60,7 +64,7 @@ public:
 private:
 	size_t stride_px;
 
-	std::conditional_t<is_const_span, const pixel_type, pixel_type>* buffer = nullptr;
+	pixel_type* buffer = nullptr;
 
 	template <bool is_const>
 	class iterator_internal
@@ -247,7 +251,18 @@ public:
 
 	image_span(image<channel_type, number_of_channels>& img);
 
-	// TODO: add constructor to convert to const_image_span
+	/**
+	 * @brief Conversion constructor.
+	 * Constructor for automatic conversion to const_image_span or span of another convertible channel type.
+	 */
+	template <typename other_channel_type, bool is_other_const_span>
+	image_span(const image_span<other_channel_type, number_of_channels, is_other_const_span>& s) :
+		image_span(
+			s.dims(), //
+			s.stride_pixels(),
+			s.data()
+		)
+	{}
 
 	pixel_type* data()
 	{

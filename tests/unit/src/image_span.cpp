@@ -5,6 +5,19 @@
 
 namespace {
 const tst::set set("image_span", [](tst::suite& suite) {
+	suite.add("default_constructor", []() {
+		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
+
+		decltype(img)::image_span_type span;
+		tst::check(span.empty(), SL);
+		tst::check_eq(span.dims(), decltype(img)::dimensions_type(0), SL);
+
+		span = img.span();
+		span.clear(0);
+
+		tst::check_eq(span[0][0], decltype(img)::pixel_type(0), SL);
+	});
+
 	suite.add("constructor_from_image", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 		img.span().clear(10);

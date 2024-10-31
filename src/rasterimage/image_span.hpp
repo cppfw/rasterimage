@@ -249,6 +249,10 @@ public:
 		buffer(buffer)
 	{}
 
+	image_span() :
+		dimensioned({0, 0})
+	{}
+
 	image_span(image<channel_type, number_of_channels>& img);
 
 	/**

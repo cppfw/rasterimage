@@ -244,12 +244,18 @@ private:
 	{}
 
 public:
-	using iterator = iterator_internal<false>;
+	using iterator = iterator_internal<is_const_span>;
 	using const_iterator = iterator_internal<true>;
 	using reverse_iterator = std::reverse_iterator<iterator>;
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 	image_span(image<channel_type, number_of_channels>& img);
+
+	/**
+	 * @brief Conversion constructor from image.
+	 * Constructor for automatic conversion to const_image_span or span of another convertible channel type.
+	 */
+	image_span(const image<channel_type, number_of_channels>& img);
 
 	/**
 	 * @brief Conversion constructor.
@@ -264,22 +270,22 @@ public:
 		)
 	{}
 
-	pixel_type* data()
+	pixel_type* data() noexcept
 	{
 		return this->buffer;
 	}
 
-	const pixel_type* data() const
+	const pixel_type* data() const noexcept
 	{
 		return this->buffer;
 	}
 
-	unsigned stride_pixels() const
+	unsigned stride_pixels() const noexcept
 	{
 		return this->stride_px;
 	}
 
-	size_t stride_bytes() const
+	size_t stride_bytes() const noexcept
 	{
 		return this->stride_pixels() * sizeof(pixel_type);
 	}
@@ -339,24 +345,35 @@ public:
 		return *utki::next(this->begin(), line_index);
 	}
 
-	image_span subspan(r4::rectangle<uint32_t> rect)
+	image_span subspan(r4::rectangle<uint32_t> rect) noexcept
 	{
 		ASSERT(r4::rectangle<uint32_t>({0, 0}, this->dims()).contains(rect), [&](auto& o) {
 			o << "requested subspan is out of the span, this->dims() = " << this->dims() << ", rect = " << rect;
 		})
 
-		image_span
-			ret( //
+		return image_span( //
 				rect.d,
 				this->stride_px,
 				&(*this)[rect.p.y()][rect.p.x()]
 			);
-
-		return ret;
 	}
 
-	void clear(pixel_type val)
+	const_image_span_type subspan(r4::rectangle<uint32_t> rect) const noexcept
 	{
+		ASSERT(r4::rectangle<uint32_t>({0, 0}, this->dims()).contains(rect), [&](auto& o) {
+			o << "requested subspan is out of the span, this->dims() = " << this->dims() << ", rect = " << rect;
+		})
+
+		return const_image_span_type( //
+				rect.d,
+				this->stride_px,
+				&(*this)[rect.p.y()][rect.p.x()]
+			);
+	}
+
+	void clear(pixel_type val) noexcept
+	{
+		static_assert(!is_const_span, "image_span is const, cannot clear");
 		for (auto l : *this) {
 			for (auto& p : l) {
 				p = val;
@@ -366,6 +383,8 @@ public:
 
 	void swap_red_blue() noexcept
 	{
+		static_assert(!is_const_span, "image_span is const, cannot swap red and blue");
+
 		using std::swap;
 		for (auto l : *this) {
 			for (auto& p : l) {
@@ -376,6 +395,7 @@ public:
 
 	void unpremultiply_alpha() noexcept
 	{
+		static_assert(!is_const_span, "image_span is const, cannot unpremultiply alpha");
 		for (auto l : *this) {
 			for (auto& p : l) {
 				p = rasterimage::unpremultiply_alpha(p);
@@ -385,6 +405,8 @@ public:
 
 	void flip_vertical() noexcept
 	{
+		static_assert(!is_const_span, "image_span is const, cannot flip vetical");
+
 		// NOTE: the std::prev(this->end()) cannot be used here because iterator_category is std::input_iterator_tag,
 		//       while std::prev() requires at least std::bidirectional_iterator_tag.
 		for (auto upper = this->begin(), lower = --this->end(); upper < lower; ++upper, --lower) {

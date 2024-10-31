@@ -5,6 +5,24 @@
 
 namespace {
 const tst::set set("image_span", [](tst::suite& suite) {
+	suite.add("constructor_from_image", []() {
+		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
+		img.span().clear(10);
+
+		decltype(img)::image_span_type im(img);
+		tst::check_eq(im[0][0], decltype(im)::pixel_type{10, 10, 10, 10}, SL);
+	});
+
+	suite.add("constructor_from_const_image", []() {
+		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
+		img.span().clear(10);
+
+		const auto& cimg = img;
+
+		decltype(img)::const_image_span_type im(cimg);
+		tst::check_eq(im[0][0], decltype(im)::pixel_type{10, 10, 10, 10}, SL);
+	});
+
 	suite.add("clear", []() {
 		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
 
@@ -372,6 +390,33 @@ const tst::set set("image_span", [](tst::suite& suite) {
 		tst::check_eq(im[5][1], expected1, SL);
 		tst::check_eq(im[5][2], expected1, SL);
 		tst::check_eq(im[5][3], expected1, SL);
+	});
+
+	suite.add("subspan__rectangle_const", []() {
+		rasterimage::image<uint8_t, 4> img(rasterimage::dimensioned::dimensions_type{100, 200});
+
+		auto im = img.span();
+
+		decltype(im)::pixel_type expected1 = {10, 20, 30, 40};
+		im.clear(expected1);
+
+		auto subim = im.subspan({1, 2, 2, 3});
+
+		decltype(im)::pixel_type expected2(0);
+		subim.clear(expected2);
+
+		const auto& cimg = img;
+		auto cim = cimg.span();
+		auto csubim = cim.subspan({1, 2, 2, 3});
+
+		tst::check_eq(csubim[0][0], expected2, SL);
+		tst::check_eq(csubim[0][1], expected2, SL);
+
+		tst::check_eq(csubim[1][0], expected2, SL);
+		tst::check_eq(csubim[1][1], expected2, SL);
+
+		tst::check_eq(csubim[2][0], expected2, SL);
+		tst::check_eq(csubim[2][1], expected2, SL);
 	});
 
 	suite.add<unsigned>("flip_vertical", {1, 2, 3, 4, 5, 10, 13}, [](const auto& p) {

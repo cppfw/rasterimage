@@ -43,6 +43,8 @@ class image : public dimensioned
 public:
 	static const size_t num_channels = number_of_channels;
 
+	using image_span_type = image_span<channel_type, num_channels>;
+	using const_image_span_type = const_image_span<channel_type, num_channels>;
 	using pixel_type = r4::vector<channel_type, num_channels>;
 	using value_type = typename pixel_type::value_type;
 
@@ -91,14 +93,14 @@ public:
 		});
 	}
 
-	image_span<channel_type, number_of_channels> span() noexcept
+	image_span_type span() noexcept
 	{
 		return *this;
 	}
 
-	image_span<const channel_type, number_of_channels> span() const noexcept
+	const_image_span_type span() const noexcept
 	{
-		return *this;
+		return const_image_span_type(*this);
 	}
 
 	bool empty() const noexcept
@@ -168,6 +170,15 @@ public:
 
 template <typename channel_type, size_t number_of_channels, bool is_const_span>
 image_span<channel_type, number_of_channels, is_const_span>::image_span(image<channel_type, number_of_channels>& im) :
+	dimensioned(im.dims()),
+	stride_px(im.dims().x()),
+	buffer(&im.pixels().front())
+{}
+
+template <typename channel_type, size_t number_of_channels, bool is_const_span>
+image_span<channel_type, number_of_channels, is_const_span>::image_span(
+	const image<channel_type, number_of_channels>& im
+) :
 	dimensioned(im.dims()),
 	stride_px(im.dims().x()),
 	buffer(&im.pixels().front())

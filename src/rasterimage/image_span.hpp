@@ -62,7 +62,7 @@ public:
 	);
 
 private:
-	size_t stride_px;
+	size_t stride_px = 0;
 
 	pixel_type* buffer = nullptr;
 
@@ -79,7 +79,7 @@ private:
 
 		std::conditional_t<is_const, const_value_type, non_const_value_type> line;
 
-		size_t stride_px{};
+		size_t stride_px = 0;
 
 		iterator_internal(
 			decltype(line) line, //

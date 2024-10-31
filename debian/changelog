@@ -1,3 +1,9 @@
+librasterimage (0.1.21) unstable; urgency=medium
+
+  * add image_span default constructor
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 31 Oct 2024 16:46:01 +0200
+
 librasterimage (0.1.20) unstable; urgency=medium
 
   * make image_span constructor from plain buffer public

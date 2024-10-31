@@ -81,17 +81,17 @@ public:
 		decltype(buffer) buffer
 	) :
 		dimensioned(dimensions),
-		buffer(std::move(buffer)){ASSERT(
-			this->dims().x() * this->dims().y() == this->pixels().size(),
-			[this](auto& o) {
-				o << "rasterimage::image::image(dims, buffer): dimensions do not match with pixels array size"
-				  << "\n";
-				o << "\t"
-				  << "dims = " << this->dims() << ", pixels().size() = " << this->pixels().size();
-			}
-		)}
+		buffer(std::move(buffer))
+	{
+		ASSERT(this->dims().x() * this->dims().y() == this->pixels().size(), [this](auto& o) {
+			o << "rasterimage::image::image(dims, buffer): dimensions do not match with pixels array size"
+			  << "\n";
+			o << "\t"
+			  << "dims = " << this->dims() << ", pixels().size() = " << this->pixels().size();
+		});
+	}
 
-		image_span<channel_type, number_of_channels> span() noexcept
+	image_span<channel_type, number_of_channels> span() noexcept
 	{
 		return *this;
 	}
@@ -126,7 +126,11 @@ public:
 		return utki::make_span(&this->buffer[this->dims().x() * line_index], this->dims().x());
 	}
 
-	static image make(dimensions_type dims, const value_type* data, size_t stride_in_values = 0)
+	static image make(
+		dimensions_type dims, //
+		const value_type* data,
+		size_t stride_in_values = 0
+	)
 	{
 		if (stride_in_values == 0) {
 			stride_in_values = dims.x() * num_channels;
@@ -162,8 +166,8 @@ public:
 	}
 };
 
-template <typename channel_type, size_t number_of_channels>
-image_span<channel_type, number_of_channels>::image_span(image<channel_type, number_of_channels>& im) :
+template <typename channel_type, size_t number_of_channels, bool is_const_span>
+image_span<channel_type, number_of_channels, is_const_span>::image_span(image<channel_type, number_of_channels>& im) :
 	dimensioned(im.dims()),
 	stride_px(im.dims().x()),
 	buffer(&im.pixels().front())

@@ -32,10 +32,15 @@ SOFTWARE.
 #include "operations.hpp"
 
 namespace rasterimage {
-template <typename channel_type, size_t number_of_channels>
+template <
+	typename channel_type, //
+	size_t number_of_channels>
 class image;
 
-template <typename channel_type, size_t number_of_channels>
+template <
+	typename channel_type, //
+	size_t number_of_channels,
+	bool is_const_span = false>
 class image_span : public dimensioned
 {
 public:
@@ -55,7 +60,7 @@ public:
 private:
 	size_t stride_px;
 
-	pixel_type* buffer = nullptr;
+	std::conditional_t<is_const_span, const pixel_type, pixel_type>* buffer = nullptr;
 
 	template <bool is_const>
 	class iterator_internal
@@ -242,6 +247,8 @@ public:
 
 	image_span(image<channel_type, number_of_channels>& img);
 
+	// TODO: add constructor to convert to const_image_span
+
 	pixel_type* data()
 	{
 		return this->buffer;
@@ -375,4 +382,9 @@ public:
 		}
 	}
 };
+
+template <
+	typename channel_type, //
+	size_t number_of_channels>
+using const_image_span = image_span<channel_type, number_of_channels, true>;
 } // namespace rasterimage

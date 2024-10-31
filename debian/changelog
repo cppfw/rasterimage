@@ -1,3 +1,9 @@
+librasterimage (0.1.20) unstable; urgency=medium
+
+  * make image_span constructor from plain buffer public
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 31 Oct 2024 16:21:56 +0200
+
 librasterimage (0.1.19) unstable; urgency=medium
 
   * const_image_span

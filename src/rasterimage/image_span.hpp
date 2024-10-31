@@ -233,7 +233,13 @@ private:
 		}
 	};
 
-	image_span(
+public:
+	using iterator = iterator_internal<is_const_span>;
+	using const_iterator = iterator_internal<true>;
+	using reverse_iterator = std::reverse_iterator<iterator>;
+	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+	explicit image_span(
 		dimensions_type dimensions, //
 		size_t stride_px,
 		pixel_type* buffer
@@ -242,12 +248,6 @@ private:
 		stride_px(stride_px),
 		buffer(buffer)
 	{}
-
-public:
-	using iterator = iterator_internal<is_const_span>;
-	using const_iterator = iterator_internal<true>;
-	using reverse_iterator = std::reverse_iterator<iterator>;
-	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 	image_span(image<channel_type, number_of_channels>& img);
 

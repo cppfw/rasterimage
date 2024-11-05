@@ -461,6 +461,8 @@ const tst::set set("image_span", [](tst::suite& suite) {
 
 		tst::check_eq(span.dims(), rasterimage::dimensioned::dimensions_type{0, 0}, SL);
 		tst::check(span.data() == img.pixels().data(), SL);
+		tst::check_eq(span.stride_pixels(), unsigned(0), SL);
+		tst::check_eq(span.stride_bytes(), size_t(0), SL);
 	});
 });
 } // namespace

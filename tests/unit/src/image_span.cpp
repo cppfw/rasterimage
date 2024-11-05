@@ -453,5 +453,14 @@ const tst::set set("image_span", [](tst::suite& suite) {
 			tst::check_eq(im[i][1], expected1, SL);
 		}
 	});
+
+	suite.add("get_span_of_an_empty_image", []() {
+		rasterimage::image<int, 4> img;
+
+		auto span = img.span();
+
+		tst::check_eq(span.dims(), rasterimage::dimensioned::dimensions_type{0, 0}, SL);
+		tst::check(span.data() == img.pixels().data(), SL);
+	});
 });
 } // namespace

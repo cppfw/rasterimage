@@ -385,6 +385,16 @@ public:
 		}
 	}
 
+	void blit(
+		const_image_span_type span, //
+		r4::vector2<int> position
+	)
+	{
+		static_assert(!is_const_span, "image_span is const, cannot blit to it");
+
+		// TODO:
+	}
+
 	void swap_red_blue() noexcept
 	{
 		static_assert(!is_const_span, "image_span is const, cannot swap red and blue");

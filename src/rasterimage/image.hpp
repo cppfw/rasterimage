@@ -172,7 +172,7 @@ template <typename channel_type, size_t number_of_channels, bool is_const_span>
 image_span<channel_type, number_of_channels, is_const_span>::image_span(image<channel_type, number_of_channels>& im) :
 	dimensioned(im.dims()),
 	stride_px(im.dims().x()),
-	buffer(&im.pixels().front())
+	buffer(im.pixels().data())
 {}
 
 template <typename channel_type, size_t number_of_channels, bool is_const_span>
@@ -181,7 +181,7 @@ image_span<channel_type, number_of_channels, is_const_span>::image_span(
 ) :
 	dimensioned(im.dims()),
 	stride_px(im.dims().x()),
-	buffer(&im.pixels().front())
+	buffer(im.pixels().data())
 {}
 
 } // namespace rasterimage

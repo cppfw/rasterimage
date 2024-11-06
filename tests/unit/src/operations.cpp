@@ -98,5 +98,29 @@ const tst::set set("operations", [](tst::suite& suite) {
 		tst::check_eq(rasterimage::get_alpha(rgb), 1.0f, SL);
 		tst::check_eq(rasterimage::get_alpha(rgba), 0.4f, SL);
 	});
+
+	suite.add("luminance__float", []() {
+		r4::vector<float, 1> a = {0.1f};
+		r4::vector2<float> ga = {0.1f, 0.2f};
+		r4::vector3<float> rgb = {0.1f, 0.2f, 0.3f};
+		r4::vector4<float> rgba = {0.1f, 0.2f, 0.3f, 0.4f};
+
+		tst::check_eq(rasterimage::luminance(a), 0.1f, SL);
+		tst::check_eq(rasterimage::luminance(ga), 0.1f, SL);
+		tst::check_eq(rasterimage::luminance(rgb), 0.18596f, SL);
+		tst::check_eq(rasterimage::luminance(rgba), 0.18596f, SL);
+	});
+
+	suite.add("luminance__uint8_t", []() {
+		r4::vector<uint8_t, 1> a = {0x13};
+		r4::vector2<uint8_t> ga = {0x13, 0x14};
+		r4::vector3<uint8_t> rgb = {0x13, 0x44, 0xfe};
+		r4::vector4<uint8_t> rgba = {0x13, 0x44, 0xfe, 0xab};
+
+		tst::check_eq(rasterimage::luminance(a), uint8_t(0x13), SL);
+		tst::check_eq(rasterimage::luminance(ga), uint8_t(0x13), SL);
+		tst::check_eq(rasterimage::luminance(rgb), uint8_t(69), SL);
+		tst::check_eq(rasterimage::luminance(rgba), uint8_t(69), SL);
+	});
 });
 } // namespace

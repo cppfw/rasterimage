@@ -156,6 +156,30 @@ constexpr r4::vector4<value_type> unpremultiply_alpha(const r4::vector4<value_ty
 }
 
 /**
+ * @brief Calculate luminance of a pixel.
+ * @param px - pixel value to calculate luminance from.
+ */
+template <typename value_type, size_t num_channels>
+constexpr value_type luminance(const r4::vector<value_type, num_channels>& px)
+{
+	if constexpr (num_channels == 1 || num_channels == 2) {
+		return px.r();
+	} else {
+		static_assert(num_channels >= 3, "logic error");
+
+		// Luminance is calculated using formula L = 0.2126 * R + 0.7152 * G + 0.0722 * B
+
+		constexpr auto red_coeff = 0.2126;
+		constexpr auto green_coeff = 0.7152;
+		constexpr auto blue_coeff = 0.0722;
+
+		return rasterimage::multiply(px.r(), value<value_type>(float(red_coeff))) +
+			rasterimage::multiply(px.g(), value<value_type>(float(green_coeff))) +
+			rasterimage::multiply(px.b(), value<value_type>(float(blue_coeff)));
+	}
+}
+
+/**
  * @brief Convert pixel of integral color value type to floating point one.
  * @param px - pixel to convert.
  * @return Pixel of floating point color value type.

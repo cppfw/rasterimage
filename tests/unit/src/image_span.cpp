@@ -464,5 +464,83 @@ const tst::set set("image_span", [](tst::suite& suite) {
 		tst::check_eq(span.stride_pixels(), unsigned(0), SL);
 		tst::check_eq(span.stride_bytes(), size_t(0), SL);
 	});
+
+	suite.add("blit__fully_within", []() {
+		rasterimage::image<uint8_t, 4> dst_img(rasterimage::dimensioned::dimensions_type{20, 10});
+		dst_img.span().clear(0);
+		tst::check_eq(dst_img[0][0], decltype(dst_img)::pixel_type(0), SL);
+
+		rasterimage::image<uint8_t, 4> src_img(rasterimage::dimensioned::dimensions_type{3, 2});
+		src_img.span().clear(13);
+		tst::check_eq(src_img[0][0], decltype(src_img)::pixel_type(13), SL);
+
+		dst_img.span().blit(src_img.span(), {2, 1});
+
+		tst::check_eq(dst_img[0][0], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[0][1], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[0][2], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[0][3], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[0][4], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[0][5], decltype(dst_img)::pixel_type(0), SL);
+
+		tst::check_eq(dst_img[1][0], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[1][1], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[1][2], decltype(dst_img)::pixel_type(13), SL);
+		tst::check_eq(dst_img[1][3], decltype(dst_img)::pixel_type(13), SL);
+		tst::check_eq(dst_img[1][4], decltype(dst_img)::pixel_type(13), SL);
+		tst::check_eq(dst_img[1][5], decltype(dst_img)::pixel_type(0), SL);
+
+		tst::check_eq(dst_img[2][0], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[2][1], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[2][2], decltype(dst_img)::pixel_type(13), SL);
+		tst::check_eq(dst_img[2][3], decltype(dst_img)::pixel_type(13), SL);
+		tst::check_eq(dst_img[2][4], decltype(dst_img)::pixel_type(13), SL);
+		tst::check_eq(dst_img[2][5], decltype(dst_img)::pixel_type(0), SL);
+
+		tst::check_eq(dst_img[3][0], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[3][1], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[3][2], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[3][3], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[3][4], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[3][5], decltype(dst_img)::pixel_type(0), SL);
+	});
+
+	suite.add("blit__partly_negative", []() {
+		rasterimage::image<uint8_t, 4> dst_img(rasterimage::dimensioned::dimensions_type{20, 10});
+		dst_img.span().clear(0);
+		tst::check_eq(dst_img[0][0], decltype(dst_img)::pixel_type(0), SL);
+
+		rasterimage::image<uint8_t, 4> src_img(rasterimage::dimensioned::dimensions_type{3, 2});
+		src_img.span().clear(13);
+		tst::check_eq(src_img[0][0], decltype(src_img)::pixel_type(13), SL);
+
+		dst_img.span().blit(src_img.span(), {-2, -1});
+
+		tst::check_eq(dst_img[0][0], decltype(dst_img)::pixel_type(13), SL);
+		tst::check_eq(dst_img[0][1], decltype(dst_img)::pixel_type(0), SL);
+
+		tst::check_eq(dst_img[1][0], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[1][1], decltype(dst_img)::pixel_type(0), SL);
+	});
+
+	suite.add("blit__partly_over", []() {
+		rasterimage::image<uint8_t, 4> dst_img(rasterimage::dimensioned::dimensions_type{20, 10});
+		dst_img.span().clear(0);
+		tst::check_eq(dst_img[0][0], decltype(dst_img)::pixel_type(0), SL);
+
+		rasterimage::image<uint8_t, 4> src_img(rasterimage::dimensioned::dimensions_type{3, 2});
+		src_img.span().clear(13);
+		tst::check_eq(src_img[0][0], decltype(src_img)::pixel_type(13), SL);
+
+		dst_img.span().blit(src_img.span(), {18, 9});
+
+		tst::check_eq(dst_img[8][17], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[8][18], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[8][19], decltype(dst_img)::pixel_type(0), SL);
+
+		tst::check_eq(dst_img[9][17], decltype(dst_img)::pixel_type(0), SL);
+		tst::check_eq(dst_img[9][18], decltype(dst_img)::pixel_type(13), SL);
+		tst::check_eq(dst_img[9][19], decltype(dst_img)::pixel_type(13), SL);
+	});
 });
 } // namespace

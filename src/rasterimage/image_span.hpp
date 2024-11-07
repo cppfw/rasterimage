@@ -392,7 +392,50 @@ public:
 	{
 		static_assert(!is_const_span, "image_span is const, cannot blit to it");
 
-		// TODO:
+		auto this_rect = r4::rectangle<int>(
+			0, //
+			this->dims().to<int>()
+		);
+
+		auto span_rect_relative_to_this_rect = r4::rectangle<int>(
+			position, //
+			span.dims().template to<int>()
+		);
+
+		auto dst_rect = this_rect.intersect(span_rect_relative_to_this_rect);
+
+		if (dst_rect.d.is_any_zero()) {
+			// image to blit is out of destination span
+			return;
+		}
+
+		ASSERT(dst_rect.p.is_positive_or_zero())
+		ASSERT(dst_rect.d.is_positive())
+
+		// rectangle on the source span which will actually be blitted
+		auto src_rect = r4::rectangle<int>(max(-position, 0), dst_rect.d);
+
+		ASSERT(src_rect.p.is_positive_or_zero())
+		ASSERT(src_rect.d.is_positive())
+		ASSERT(r4::rectangle<int>(0, span.dims().template to<int>()).contains(src_rect))
+
+		auto dst_span = this->subspan(dst_rect.to<unsigned>());
+		auto src_span = span.subspan(src_rect.to<unsigned>());
+
+		ASSERT(!dst_span.empty())
+		ASSERT(!src_span.empty())
+		ASSERT(src_span.dims() == dst_span.dims())
+
+		// TODO: use zip_view
+		auto src_line = src_span.begin();
+		auto dst_line = dst_span.begin();
+		for (; src_line != src_span.end(); ++src_line, ++dst_line) {
+			std::copy(
+				src_line->begin(), //
+				src_line->end(),
+				dst_line->begin()
+			);
+		}
 	}
 
 	void swap_red_blue() noexcept

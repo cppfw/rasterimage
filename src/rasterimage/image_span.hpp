@@ -394,7 +394,7 @@ public:
 
 		auto this_rect = r4::rectangle<int>(
 			0, //
-			this->dims().to<int>()
+			this->dims().template to<int>()
 		);
 
 		auto span_rect_relative_to_this_rect = r4::rectangle<int>(

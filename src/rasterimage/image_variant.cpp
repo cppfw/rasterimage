@@ -203,7 +203,7 @@ void image_variant::write_png(const papki::file& fi) const
 		// get bits per channel
 		std::visit(
 			[](const auto& im) {
-				using value_type = typename std::remove_reference_t<decltype(im)>::value_type;
+				using value_type = typename std::remove_reference_t<decltype(im)>::pixel_type::value_type;
 				if constexpr (!std::is_same_v<value_type, uint8_t> && !std::is_same_v<value_type, uint16_t>) {
 					throw std::invalid_argument("write_png(): PNG supports only 8 bit or 16 bit per channel images");
 				}

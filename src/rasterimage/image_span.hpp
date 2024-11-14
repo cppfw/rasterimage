@@ -51,7 +51,6 @@ public:
 		is_const_span, //
 		const r4::vector<channel_type, num_channels>,
 		r4::vector<channel_type, num_channels>>;
-	using value_type = typename pixel_type::value_type;
 
 	static_assert(sizeof(pixel_type) == sizeof(channel_type) * number_of_channels, "pixel_type has padding");
 
@@ -96,6 +95,7 @@ private:
 		using iterator_category = std::input_iterator_tag;
 
 		using difference_type = std::ptrdiff_t;
+
 		using value_type = decltype(line);
 		using reference = value_type;
 		using pointer = void;
@@ -238,6 +238,7 @@ public:
 	using const_iterator = iterator_internal<true>;
 	using reverse_iterator = std::reverse_iterator<iterator>;
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+	using value_type = typename iterator::value_type;
 
 	explicit image_span(
 		dimensions_type dimensions, //
@@ -297,6 +298,15 @@ public:
 	bool empty() const noexcept
 	{
 		return this->buffer == nullptr;
+	}
+
+	/**
+	 * @brief Get number of lines.
+	 * @return Number of lines in this image span.
+	 */
+	size_t size() const noexcept
+	{
+		return this->dims().y();
 	}
 
 	iterator begin() noexcept
@@ -426,14 +436,11 @@ public:
 		ASSERT(!src_span.empty())
 		ASSERT(src_span.dims() == dst_span.dims())
 
-		// TODO: use zip_view
-		auto src_line = src_span.begin();
-		auto dst_line = dst_span.begin();
-		for (; src_line != src_span.end(); ++src_line, ++dst_line) {
+		for (auto [s, d] : utki::views::zip(src_span, dst_span)) {
 			std::copy(
-				src_line->begin(), //
-				src_line->end(),
-				dst_line->begin()
+				s.begin(), //
+				s.end(),
+				d.begin()
 			);
 		}
 	}

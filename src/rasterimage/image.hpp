@@ -46,7 +46,6 @@ public:
 	using image_span_type = image_span<channel_type, num_channels>;
 	using const_image_span_type = const_image_span<channel_type, num_channels>;
 	using pixel_type = r4::vector<channel_type, num_channels>;
-	using value_type = typename pixel_type::value_type;
 
 	static_assert(sizeof(pixel_type) == sizeof(channel_type) * number_of_channels, "pixel_type has padding");
 
@@ -130,7 +129,7 @@ public:
 
 	static image make(
 		dimensions_type dims, //
-		const value_type* data,
+		const typename pixel_type::value_type* data,
 		size_t stride_in_values = 0
 	)
 	{
@@ -151,7 +150,7 @@ public:
 				// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 				src_row + num_values_per_row,
 				// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-				reinterpret_cast<value_type*>(row.data())
+				reinterpret_cast<typename pixel_type::value_type*>(row.data())
 			);
 			// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 			src_row += stride_in_values;
@@ -162,9 +161,9 @@ public:
 		return im;
 	}
 
-	constexpr static value_type value(float f)
+	constexpr static typename pixel_type::value_type value(float f)
 	{
-		return rasterimage::value<value_type>(f);
+		return rasterimage::value<pixel_type::value_type>(f);
 	}
 };
 

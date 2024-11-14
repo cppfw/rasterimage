@@ -426,7 +426,7 @@ jobs:
           - {os: debian, codename: bookworm, image_owner: , labels: [arm64,docker]}
     runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
     container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
-    name: conan - linux - ${{ matrix.arch }}
+    name: conan - linux | ${{ matrix.labels[0] }}
     steps:
       - name: add llvm repo (for clang-format)
         uses: myci-actions/add-deb-repo@master

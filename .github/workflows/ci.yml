@@ -412,15 +412,13 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
 ##### conan - linux #####
   conan-linux:
-    # TODO: remove comment
-    # if: ${{ false }}  # disable until libpng is updated
     strategy:
       fail-fast: false
       matrix:
         include:
           - {os: debian, codename: bookworm, image_owner: }
           # - {os: debian, codename: bookworm, image_owner: i386/, labels: [i386,docker]}
-          - {os: debian, codename: bookworm, image_owner: , labels: [arm32,docker]}
+          # - {os: debian, codename: bookworm, image_owner: , labels: [arm32,docker]}
           - {os: debian, codename: bookworm, image_owner: , labels: [arm64,docker]}
     runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
     container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}

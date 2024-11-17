@@ -287,7 +287,7 @@ public:
 
 	unsigned stride_pixels() const noexcept
 	{
-		return this->stride_px;
+		return unsigned(this->stride_px);
 	}
 
 	size_t stride_bytes() const noexcept

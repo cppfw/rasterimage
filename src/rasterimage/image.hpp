@@ -163,7 +163,7 @@ public:
 
 	constexpr static typename pixel_type::value_type value(float f)
 	{
-		return rasterimage::value<pixel_type::value_type>(f);
+		return rasterimage::value<typename pixel_type::value_type>(f);
 	}
 };
 

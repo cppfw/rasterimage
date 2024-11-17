@@ -1,3 +1,9 @@
+librasterimage (0.1.24) unstable; urgency=medium
+
+  * conan: rebuild
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 17 Nov 2024 22:55:27 +0200
+
 librasterimage (0.1.23) unstable; urgency=medium
 
   * implement image_span::blit()

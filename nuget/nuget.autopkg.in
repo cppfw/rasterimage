@@ -18,9 +18,9 @@ nuget{
 		title: raster image C++ library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/cppfw/rasterimage/master/LICENSE";
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/rasterimage/main/LICENSE";
 		projectUrl: "https://github.com/cppfw/rasterimage";
-		iconUrl: "https://github.com/cppfw/rasterimage/blob/master/logo.svg";
+		iconUrl: "https://github.com/cppfw/rasterimage/blob/main/logo.svg";
 		requireLicenseAcceptance:false;
 		summary: raster image C++ library;
 

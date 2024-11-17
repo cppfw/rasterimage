@@ -1,3 +1,9 @@
+librasterimage (0.1.25) unstable; urgency=medium
+
+  * use typename
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 17 Nov 2024 23:06:49 +0200
+
 librasterimage (0.1.24) unstable; urgency=medium
 
   * conan: rebuild

@@ -1,3 +1,9 @@
+librasterimage (0.1.26) unstable; urgency=medium
+
+  * vcpkgize
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 26 Nov 2024 20:34:13 +0200
+
 librasterimage (0.1.25) unstable; urgency=medium
 
   * use typename

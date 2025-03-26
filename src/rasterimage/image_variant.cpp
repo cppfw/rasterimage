@@ -161,7 +161,10 @@ void image_variant::write_png(const papki::file& fi) const
 		throw std::logic_error("writing of non RGBA iamges is currently not supported");
 	}
 
-	papki::file::guard file_guard(fi, papki::file::mode::create);
+	papki::file::guard file_guard(
+		fi, //
+		papki::mode::create
+	);
 
 	png_structp png_ptr = nullptr;
 	png_infop info_ptr = nullptr;

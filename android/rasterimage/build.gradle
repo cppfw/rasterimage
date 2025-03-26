@@ -89,5 +89,6 @@ task copy_aar(type: Copy) {
 }
 
 afterEvaluate {
-    copy_aar.dependsOn(assembleRelease) // TODO: is this needed?
+    copy_aar.dependsOn(assembleRelease)
+    copy_aar.dependsOn(bundleStaticLibRelease)
 }

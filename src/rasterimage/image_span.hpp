@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include <r4/rectangle.hpp>
+#include <utki/views.hpp>
 
 #include "dimensioned.hpp"
 #include "operations.hpp"

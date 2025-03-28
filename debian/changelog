@@ -1,3 +1,9 @@
+librasterimage (0.1.31) unstable; urgency=medium
+
+  * vcpkg: update
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 28 Mar 2025 14:03:24 +0200
+
 librasterimage (0.1.30) unstable; urgency=medium
 
   * update

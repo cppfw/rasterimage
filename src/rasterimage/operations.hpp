@@ -265,8 +265,7 @@ constexpr r4::vector<to_value_type, num_channels> to(const r4::vector<from_value
 	}
 }
 
-// TODO: make constexpr
-inline uint32_t to_32bit_pixel(const r4::vector4<uint8_t>& px)
+inline constexpr uint32_t to_32bit_pixel(const r4::vector4<uint8_t>& px)
 {
 	return //
 		(uint32_t(px.a()) << (utki::byte_bits * 3)) | //

@@ -8,7 +8,7 @@
       {
         "kind": "git",
         "repository": "https://github.com/cppfw/vcpkg-repo/",
-        "baseline": "f737d72fe19c26c3b4d61bc0e1c6ddf60a71d804",
+        "baseline": "490ad0c202c135087af5789c655587013ee197be",
         "reference": "main",
         "packages": [ "utki", "papki", "r4" ]
       }

@@ -44,7 +44,10 @@ namespace rasterimage {
  * @return Product of the two color values.
  */
 template <typename value_type>
-constexpr value_type multiply(value_type a, value_type b)
+constexpr value_type multiply(
+	value_type a, //
+	value_type b
+)
 {
 #ifdef DEBUG
 	constexpr auto val_zero = value_type(0);
@@ -80,7 +83,10 @@ constexpr value_type multiply(value_type a, value_type b)
  * @return Result of division of first value by second value.
  */
 template <typename value_type>
-constexpr value_type divide(value_type a, value_type b)
+constexpr value_type divide(
+	value_type a, //
+	value_type b
+)
 {
 #ifdef DEBUG
 	constexpr auto val_zero = value_type(0);

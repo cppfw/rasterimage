@@ -25,9 +25,9 @@ class RasterimageConan(ConanFile):
 		if self.settings.os == "Emscripten":
 			self.requires("png/[>=1.6.37]@cppfw/main", transitive_headers=False)
 		else:
-			self.requires("libpng/[>=1.6.37]", transitive_headers=False))
+			self.requires("libpng/[>=1.6.37]", transitive_headers=False)
 		
-		self.requires("libjpeg/[>=0.0.0]", transitive_headers=False))
+		self.requires("libjpeg/[>=0.0.0]", transitive_headers=False)
 	
 	def build_requirements(self):
 		self.tool_requires("prorab/[>=2.0.27]@cppfw/main")

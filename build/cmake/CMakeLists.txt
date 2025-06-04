@@ -7,7 +7,6 @@ project(${name})
 # Otherwise VCPKG does not set the CMAKE_PREFIX_PATH to find packages.
 find_package(myci CONFIG REQUIRED)
 
-find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 
@@ -30,7 +29,6 @@ myci_declare_library(${name}
         papki
         r4
     EXTERNAL_DEPENDENCIES
-        ZLIB::ZLIB
         PNG::PNG
         JPEG::JPEG
 )

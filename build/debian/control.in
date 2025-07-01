@@ -21,30 +21,46 @@ Standards-Version: 3.9.2
 Package: librasterimage$(soname)
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends:
+	${shlibs:Depends},
+	${misc:Depends}
 Description: cross-platform raster image C++ library.
- Raster image library.
+	Raster image library.
+
+Package: librasterimage-dbg$(soname)
+Section: libs
+Architecture: any
+Depends:
+	${shlibs:Depends},
+	${misc:Depends}
+Description: cross-platform raster image C++ library.
+	Debug version of librasterimage.
 
 Package: librasterimage$(soname)-dbgsrc
 Section: debug
 Architecture: all
-Depends: librasterimage$(soname)-dbgsym (= ${binary:Version}), ${misc:Depends}
+Depends:
+	librasterimage$(soname)-dbgsym (= ${binary:Version}),
+	librasterimage-dbg$(soname)-dbgsym (= ${binary:Version}),
+	${misc:Depends}
 Description: debugging sources for librasterimage$(soname) package.
 
 Package: librasterimage-dev
 Section: libdevel
 Architecture: any
 Depends:
+	librasterimage$(soname) (= ${binary:Version}),
+	librasterimage-dbg$(soname) (= ${binary:Version}),
+	${misc:Depends},
 	libutki-dev,
-	libpapki-dev,
-	librasterimage$(soname) (= ${binary:Version}), ${misc:Depends}
+	libpapki-dev
 Suggests: librasterimage-doc
 Description: cross-platform raster image C++ library.
- Raster image library.
+	Raster image library.
 
 Package: librasterimage-doc
 Section: doc
 Architecture: all
 Depends: ${misc:Depends}
 Description: documentation for librasterimage library.
- For more details see description to librasterimage-dev package.
+	For more details see description to librasterimage-dev package.

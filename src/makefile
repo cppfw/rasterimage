@@ -5,17 +5,20 @@ include prorab-license.mk
 
 $(eval $(call prorab-config, ../config))
 
-this_name := rasterimage
+this_src_dir := rasterimage
+
+this_name := $(this_src_dir)$(this_dbg)
 
 this_soname := $(shell cat $(d)soname.txt)
 
 this_srcs := $(call prorab-src-dir, .)
 
-this_ldlibs += -lpapki -lpng -ljpeg
+this_ldlibs += -l papki$(this_dbg)
+this_ldlibs += -l png
+this_ldlibs += -l jpeg
 
 $(eval $(prorab-build-lib))
 
-this_src_dir := $(this_name)
 this_license_file := ../LICENSE
 $(eval $(prorab-license))
 

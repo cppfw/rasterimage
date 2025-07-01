@@ -1,3 +1,9 @@
+librasterimage (0.1.37) unstable; urgency=medium
+
+  * debian dbg package
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 02 Jul 2025 00:07:45 +0300
+
 librasterimage (0.1.36) unstable; urgency=medium
 
   * cmake: config transient deps

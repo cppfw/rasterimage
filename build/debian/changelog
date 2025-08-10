@@ -1,3 +1,9 @@
+librasterimage (0.1.38) unstable; urgency=medium
+
+  * debian trixie build
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 10 Aug 2025 04:25:37 +0300
+
 librasterimage (0.1.37) unstable; urgency=medium
 
   * debian dbg package

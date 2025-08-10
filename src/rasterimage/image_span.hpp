@@ -367,10 +367,10 @@ public:
 		})
 
 		return image_span( //
-				rect.d,
-				this->stride_px,
-				&(*this)[rect.p.y()][rect.p.x()]
-			);
+			rect.d,
+			this->stride_px,
+			&(*this)[rect.p.y()][rect.p.x()]
+		);
 	}
 
 	const_image_span_type subspan(r4::rectangle<uint32_t> rect) const noexcept
@@ -380,10 +380,10 @@ public:
 		})
 
 		return const_image_span_type( //
-				rect.d,
-				this->stride_px,
-				&(*this)[rect.p.y()][rect.p.x()]
-			);
+			rect.d,
+			this->stride_px,
+			&(*this)[rect.p.y()][rect.p.x()]
+		);
 	}
 
 	void clear(pixel_type val) noexcept

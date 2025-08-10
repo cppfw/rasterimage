@@ -130,14 +130,12 @@ public:
 	{
 		auto ret = format(this->variant.index() % size_t(rasterimage::format::enum_size));
 		ASSERT(
-			format(
-				std::visit(
-					[](const auto& sfi) {
-						return sfi.num_channels - 1;
-					},
-					this->variant
-				)
-			) == ret
+			format(std::visit(
+				[](const auto& sfi) {
+					return sfi.num_channels - 1;
+				},
+				this->variant
+			)) == ret
 		)
 		return ret;
 	}

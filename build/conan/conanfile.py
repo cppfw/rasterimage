@@ -19,7 +19,7 @@ class RasterimageConan(ConanFile):
 
 	def requirements(self):
 		self.requires("utki/[>=1.1.192]@cppfw/main", transitive_headers=True)
-		self.requires("papki/[>=0.0.0]@cppfw/main", transitive_headers=True)
+		self.requires("fsif/[>=0.0.0]@cppfw/main", transitive_headers=True)
 		self.requires("r4/[>=0.0.0]@cppfw/main", transitive_headers=True)
 		
 		if self.settings.os == "Emscripten":

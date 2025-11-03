@@ -28,7 +28,7 @@ SOFTWARE.
 
 #include <variant>
 
-#include <papki/file.hpp>
+#include <fsif/file.hpp>
 
 #include "image.hpp"
 
@@ -175,7 +175,7 @@ public:
 	 * @param fi - file interface for writing the file. Must not be opened.
 	 *             Exisitng file will be overwritten.
 	 */
-	void write_png(const papki::file& fi) const;
+	void write_png(const fsif::file& fi) const;
 };
 
 /**
@@ -183,14 +183,14 @@ public:
  * @param fi - file to read the image from. File must not be opened.
  * @return Image read from the file.
  */
-image_variant read_png(const papki::file& fi);
+image_variant read_png(const fsif::file& fi);
 
 /**
  * @brief Read JPEG image from file.
  * @param fi - file to read the image from. File must not be opened.
  * @return Image read from the file.
  */
-image_variant read_jpeg(const papki::file& fi);
+image_variant read_jpeg(const fsif::file& fi);
 
 /**
  * @brief Read image from file.
@@ -198,6 +198,6 @@ image_variant read_jpeg(const papki::file& fi);
  * @param fi - file to read the image from. File must not be opened.
  * @return Image read from file.
  */
-image_variant read(const papki::file& fi);
+image_variant read(const fsif::file& fi);
 
 } // namespace rasterimage

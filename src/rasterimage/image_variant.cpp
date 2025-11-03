@@ -134,7 +134,7 @@ namespace {
 void png_write_callback(png_structp png_ptr, png_bytep data, png_size_t length)
 {
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-	auto fi = reinterpret_cast<papki::file*>(png_get_io_ptr(png_ptr));
+	auto fi = reinterpret_cast<fsif::file*>(png_get_io_ptr(png_ptr));
 	ASSERT(fi)
 
 	ASSERT(fi->is_open())
@@ -149,7 +149,7 @@ void png_flush_callback(png_structp png_ptr)
 }
 } // namespace
 
-void image_variant::write_png(const papki::file& fi) const
+void image_variant::write_png(const fsif::file& fi) const
 {
 	if (this->get_depth() != rasterimage::depth::uint_8_bit) {
 		// TODO: add support for writing 16 bit images
@@ -161,9 +161,9 @@ void image_variant::write_png(const papki::file& fi) const
 		throw std::logic_error("writing of non RGBA iamges is currently not supported");
 	}
 
-	papki::file::guard file_guard(
+	fsif::file::guard file_guard(
 		fi, //
-		papki::mode::create
+		fsif::mode::create
 	);
 
 	png_structp png_ptr = nullptr;
@@ -192,7 +192,7 @@ void image_variant::write_png(const papki::file& fi) const
 	png_set_write_fn(
 		png_ptr,
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-		const_cast<papki::file*>(&fi), // png_set_write_fn() expects non-const void*
+		const_cast<fsif::file*>(&fi), // png_set_write_fn() expects non-const void*
 		&png_write_callback,
 		&png_flush_callback
 	);
@@ -261,7 +261,7 @@ void image_variant::write_png(const papki::file& fi) const
 	png_write_end(png_ptr, nullptr);
 }
 
-image_variant rasterimage::read(const papki::file& fi)
+image_variant rasterimage::read(const fsif::file& fi)
 {
 	auto suffix = fi.suffix();
 
@@ -278,7 +278,7 @@ namespace {
 void png_read_callback(png_structp png_ptr, png_bytep data, png_size_t length)
 {
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-	auto fi = reinterpret_cast<const papki::file*>(png_get_io_ptr(png_ptr));
+	auto fi = reinterpret_cast<const fsif::file*>(png_get_io_ptr(png_ptr));
 	ASSERT(fi)
 
 	// TODO: get number of bytes read and check for EOF, rise error if needed
@@ -286,12 +286,12 @@ void png_read_callback(png_structp png_ptr, png_bytep data, png_size_t length)
 }
 } // namespace
 
-image_variant rasterimage::read_png(const papki::file& fi)
+image_variant rasterimage::read_png(const fsif::file& fi)
 {
 	ASSERT(!fi.is_open())
 
 	// open file
-	papki::file::guard file_guard(fi);
+	fsif::file::guard file_guard(fi);
 
 	static const unsigned png_sig_size = 8; // the size of PNG signature
 
@@ -328,7 +328,7 @@ image_variant rasterimage::read_png(const papki::file& fi)
 	png_set_read_fn(
 		png_ptr,
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-		const_cast<papki::file*>(&fi), // png_set_read_fn() expects non-const void*
+		const_cast<fsif::file*>(&fi), // png_set_read_fn() expects non-const void*
 		png_read_callback
 	);
 
@@ -463,7 +463,7 @@ constexpr size_t jpeg_input_buffer_size = 4096;
 
 struct data_manager_jpeg_source {
 	jpeg_source_mgr pub;
-	const papki::file* fi;
+	const fsif::file* fi;
 	JOCTET* buffer;
 	bool sof; // true if the file was just opened
 };
@@ -546,11 +546,11 @@ void jpeg_callback_term_source(j_decompress_ptr cinfo) {}
 
 } // namespace
 
-image_variant rasterimage::read_jpeg(const papki::file& fi)
+image_variant rasterimage::read_jpeg(const fsif::file& fi)
 {
 	ASSERT(!fi.is_open())
 
-	papki::file::guard file_guard(fi);
+	fsif::file::guard file_guard(fi);
 
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 	jpeg_decompress_struct cinfo; // decompression object

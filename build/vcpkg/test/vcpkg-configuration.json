@@ -10,7 +10,7 @@
         "repository": "https://github.com/cppfw/vcpkg-repo/",
         "baseline": "3b85fc9d0bfd1b78f7a1fff77a825b850df61606",
         "reference": "main",
-        "packages": [ "myci", "utki", "papki", "r4" ]
+        "packages": [ "myci", "utki", "fsif", "r4" ]
       }
     ],
     "overlay-ports": [

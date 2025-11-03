@@ -12,7 +12,7 @@ Build-Depends:
 	libutki-dev,
 	libr4-dev,
 	libtst-dev,
-	libpapki-dev,
+	libfsif-dev,
 	libpng-dev,
 	libjpeg-dev
 Build-Depends-Indep: doxygen
@@ -53,7 +53,7 @@ Depends:
 	librasterimage-dbg$(soname) (= ${binary:Version}),
 	${misc:Depends},
 	libutki-dev,
-	libpapki-dev
+	libfsif-dev
 Suggests: librasterimage-doc
 Description: cross-platform raster image C++ library.
 	Raster image library.

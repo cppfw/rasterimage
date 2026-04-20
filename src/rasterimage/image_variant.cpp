@@ -205,12 +205,13 @@ void image_variant::write_png(const fsif::file& fi) const
 		dims.y(),
 		// get bits per channel
 		std::visit(
-			[](const auto& im) {
+			[](const auto& im) -> int {
 				using value_type = typename std::remove_reference_t<decltype(im)>::pixel_type::value_type;
 				if constexpr (!std::is_same_v<value_type, uint8_t> && !std::is_same_v<value_type, uint16_t>) {
 					throw std::invalid_argument("write_png(): PNG supports only 8 bit or 16 bit per channel images");
+				} else {
+					return int(sizeof(value_type) * utki::byte_bits);
 				}
-				return int(sizeof(value_type) * utki::byte_bits);
 			},
 			this->variant
 		),
@@ -218,7 +219,7 @@ void image_variant::write_png(const fsif::file& fi) const
 		[this]() {
 			switch (this->get_format()) {
 				case rasterimage::format::enum_size:
-					ASSERT(false)
+					utki::assert(false, SL);
 					[[fallthrough]];
 				case rasterimage::format::grey:
 					return PNG_COLOR_TYPE_GRAY;
@@ -229,7 +230,7 @@ void image_variant::write_png(const fsif::file& fi) const
 				case rasterimage::format::rgba:
 					return PNG_COLOR_TYPE_RGB_ALPHA;
 			}
-			ASSERT(false)
+			utki::assert(false, SL);
 			return PNG_COLOR_TYPE_GRAY;
 		}(),
 		PNG_INTERLACE_NONE,

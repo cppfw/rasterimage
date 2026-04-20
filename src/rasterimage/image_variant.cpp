@@ -143,7 +143,7 @@ void png_write_callback(png_structp png_ptr, png_bytep data, png_size_t length)
 	fi->write(utki::make_span(data, length));
 }
 
-void png_flush_callback(png_structp png_ptr)
+void png_flush_callback(png_structp /* png_ptr */)
 {
 	// do nothing
 }
@@ -542,13 +542,13 @@ void jpeg_callback_skip_input_data(j_decompress_ptr cinfo, long num_bytes)
 
 // terminate source when decompress is finished
 // (nothing to do in this function in our case)
-void jpeg_callback_term_source(j_decompress_ptr cinfo) {}
+void jpeg_callback_term_source(j_decompress_ptr /* cinfo */) {}
 
 } // namespace
 
 image_variant rasterimage::read_jpeg(const fsif::file& fi)
 {
-	ASSERT(!fi.is_open())
+	utki::assert(!fi.is_open(), SL);
 
 	fsif::file::guard file_guard(fi);
 

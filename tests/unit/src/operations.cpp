@@ -25,7 +25,7 @@ const tst::set set("operations", [](tst::suite& suite) {
 
 		auto pixel = rasterimage::to<uint8_t>(px);
 
-		tst::check_eq(pixel, r4::vector4<uint8_t>{0x0f, 0x1f, 0x2f, 0x3f}, SL) << std::hex << " pixel = 0x" << pixel;
+		tst::check_eq(pixel, r4::vector4<uint8_t>{0x0f, 0x1f, 0x2f, 0x3f}, [&](auto& o){o << std::hex << " pixel = 0x" << pixel;}, SL);
 	});
 
 	suite.add("to_uint8_t__from_float", []() {
@@ -33,7 +33,7 @@ const tst::set set("operations", [](tst::suite& suite) {
 
 		auto pixel = rasterimage::to<uint8_t>(px);
 
-		tst::check_eq(pixel, r4::vector4<uint8_t>{0x1f, 0x3f, 0x7f, 0xbf}, SL) << std::hex << " pixel = 0x" << pixel;
+		tst::check_eq(pixel, r4::vector4<uint8_t>{0x1f, 0x3f, 0x7f, 0xbf}, [&](auto& o){o << std::hex << " pixel = 0x" << pixel;}, SL);
 	});
 
 	suite.add("to_float__from_uint8_t", []() {

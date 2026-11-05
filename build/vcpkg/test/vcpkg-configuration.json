@@ -14,7 +14,11 @@
           "myci",
           "utki",
           "fsif",
-          "r4"
+          "r4",
+          "opros",
+          "nitki",
+          "clargs",
+          "tst"
         ]
       }
     ],

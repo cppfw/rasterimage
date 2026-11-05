@@ -28,3 +28,8 @@ myci_declare_library(${name}
         PNG
         JPEG
 )
+
+# ==============
+# = unit tests =
+
+include(unit_tests.cmake)

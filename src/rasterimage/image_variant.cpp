@@ -174,17 +174,18 @@ void image_variant::write_png(const fsif::file& fi) const
 	if (png_ptr == nullptr) {
 		throw std::runtime_error("Could not allocate PNG write struct");
 	}
-	utki::scope_exit png_scope_exit([&png_ptr]() {
-		png_destroy_write_struct(&png_ptr, nullptr);
-	});
-
 	// Initialize info structure
 	info_ptr = png_create_info_struct(png_ptr);
 	if (info_ptr == nullptr) {
+		png_destroy_write_struct(&png_ptr, nullptr);
 		throw std::runtime_error("Could not allocate PNG info struct");
 	}
-	utki::scope_exit info_scope_exit([&png_ptr, &info_ptr]() {
-		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
+	// png_destroy_write_struct(&png_ptr, &info_ptr) destroys both the write struct and the info struct.
+	// The old code passed nullptr as the second arg (only destroying the write struct) and relied on
+	// png_free_data() to clean up the info — but png_free_data() only frees the data pointers *inside*
+	// the info struct, not the png_info allocation itself from png_create_info_struct(), causing a leak.
+	utki::scope_exit png_scope_exit([&png_ptr, &info_ptr]() {
+		png_destroy_write_struct(&png_ptr, &info_ptr);
 	});
 
 	auto dims = this->dims();

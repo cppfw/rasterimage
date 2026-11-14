@@ -32,7 +32,6 @@ SOFTWARE.
 #include <utki/debug.hpp>
 #include <utki/types.hpp>
 
-// TODO: doxygen
 namespace rasterimage {
 
 /**
@@ -218,6 +217,14 @@ constexpr r4::vector<to_value_type, num_channels> to_integral(const r4::vector<f
 	return (px * val_max).template to<to_value_type>();
 }
 
+/**
+ * @brief Convert pixel to a different channel value type.
+ * @tparam to_value_type - type of the channel values in the resulting pixel.
+ * @tparam from_value_type - type of the channel values in the source pixel.
+ * @tparam num_channels - number of channels in the pixel.
+ * @param px - pixel to convert.
+ * @return converted pixel.
+ */
 template <typename to_value_type, typename from_value_type, size_t num_channels>
 constexpr r4::vector<to_value_type, num_channels> to(const r4::vector<from_value_type, num_channels>& px)
 {
@@ -270,6 +277,13 @@ constexpr r4::vector<to_value_type, num_channels> to(const r4::vector<from_value
 	}
 }
 
+/**
+ * @brief Convert pixel to a 32-bit pixel value.
+ * The red channel is packed into the least significant byte and
+ * the alpha channel into the most significant byte.
+ * @param px - pixel to convert.
+ * @return 32-bit pixel value in RGBA format.
+ */
 inline constexpr uint32_t to_32bit_pixel(const r4::vector4<uint8_t>& px)
 {
 	return //
@@ -279,6 +293,12 @@ inline constexpr uint32_t to_32bit_pixel(const r4::vector4<uint8_t>& px)
 		uint32_t(px.r());
 }
 
+/**
+ * @brief Convert a 32-bit pixel value to a pixel.
+ * Inverse of to_32bit_pixel().
+ * @param px - 32-bit pixel value in RGBA format.
+ * @return converted pixel.
+ */
 inline constexpr r4::vector4<uint8_t> from_32bit_pixel(uint32_t px)
 {
 	return {
@@ -289,6 +309,18 @@ inline constexpr r4::vector4<uint8_t> from_32bit_pixel(uint32_t px)
 	};
 }
 
+/**
+ * @brief Get a pixel with 4 components (RGBA) from a pixel with 1 to 4 components.
+ * Component mapping rules:
+ * - 1 component (grey): r = g = b = grey, a = 1;
+ * - 2 components (grey + alpha): r = g = b = grey, a = alpha;
+ * - 3 components (RGB): a = 1;
+ * - 4 components (RGBA): no change.
+ * @tparam value_type - type of the channel values.
+ * @tparam num_channels - number of channels in the source pixel.
+ * @param px - pixel with 1 to 4 components.
+ * @return pixel with 4 components (RGBA).
+ */
 template <typename value_type, size_t num_channels>
 inline r4::vector4<value_type> get_rgba(const r4::vector<value_type, num_channels>& px)
 {
@@ -304,6 +336,18 @@ inline r4::vector4<value_type> get_rgba(const r4::vector<value_type, num_channel
 	}
 }
 
+/**
+ * @brief Get alpha component from a pixel with 1 to 4 components.
+ * Alpha value rules:
+ * - 1 component (grey): the grey value is used as alpha;
+ * - 2 components (grey + alpha): the alpha component;
+ * - 3 components (RGB): 1;
+ * - 4 components (RGBA): the alpha component.
+ * @tparam value_type - type of the channel values.
+ * @tparam num_channels - number of channels in the pixel.
+ * @param px - pixel with 1 to 4 components.
+ * @return alpha component of the pixel.
+ */
 template <typename value_type, size_t num_channels>
 inline value_type get_alpha(const r4::vector<value_type, num_channels>& px)
 {

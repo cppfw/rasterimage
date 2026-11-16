@@ -66,8 +66,10 @@ constexpr value_type multiply(
 			std::is_floating_point_v<value_type>,
 			"unexpected value type, expected either integral or floating point"
 		);
+#ifdef DEBUG
 		utki::assert(val_zero <= a && a <= val_one, SL);
 		utki::assert(val_zero <= b && b <= val_one, SL);
+#endif
 
 		return a * b;
 	}
@@ -106,8 +108,10 @@ constexpr value_type divide(
 			std::is_floating_point_v<value_type>,
 			"unexpected value type, expected either integral or floating point"
 		);
+#ifdef DEBUG
 		utki::assert(val_zero <= a && a <= val_one, SL);
 		utki::assert(val_zero < b && b <= val_one, SL);
+#endif
 
 		auto res = min(a / b, val_one); // clamp top
 

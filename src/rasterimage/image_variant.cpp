@@ -442,7 +442,9 @@ image_variant rasterimage::read_png(const fsif::file& fi)
 						&image,
 #endif
 						i = image.span().begin()]() mutable {
+#ifdef DEBUG
 						utki::assert(i != image.span().end(), SL);
+#endif
 						auto ret = i->data();
 						++i;
 						// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)

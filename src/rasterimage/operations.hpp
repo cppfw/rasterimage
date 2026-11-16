@@ -66,8 +66,8 @@ constexpr value_type multiply(
 			std::is_floating_point_v<value_type>,
 			"unexpected value type, expected either integral or floating point"
 		);
-		ASSERT(val_zero <= a && a <= val_one)
-		ASSERT(val_zero <= b && b <= val_one)
+		utki::assert(val_zero <= a && a <= val_one, SL);
+		utki::assert(val_zero <= b && b <= val_one, SL);
 
 		return a * b;
 	}
@@ -106,8 +106,8 @@ constexpr value_type divide(
 			std::is_floating_point_v<value_type>,
 			"unexpected value type, expected either integral or floating point"
 		);
-		ASSERT(val_zero <= a && a <= val_one)
-		ASSERT(val_zero < b && b <= val_one)
+		utki::assert(val_zero <= a && a <= val_one, SL);
+		utki::assert(val_zero < b && b <= val_one, SL);
 
 		auto res = min(a / b, val_one); // clamp top
 
@@ -260,7 +260,7 @@ constexpr r4::vector<to_value_type, num_channels> to(const r4::vector<from_value
 					);
 				});
 			} else {
-				ASSERT(sizeof(from_value_type) > sizeof(to_value_type))
+				utki::assert(sizeof(from_value_type) > sizeof(to_value_type), SL);
 
 				using calc_type = typename utki::uint_size<sizeof(from_value_type) * 2>::type;
 

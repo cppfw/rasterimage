@@ -199,14 +199,17 @@ public:
 	size_t num_channels() const noexcept
 	{
 		auto ret = size_t(this->get_format()) + 1;
-		ASSERT(
-			std::visit(
-				[](const auto& sfi) {
-					return sfi.num_channels;
-				},
-				this->variant
-			) == ret
-		)
+		utki::assert(
+			[this, ret]() -> bool {
+				return std::visit(
+						   [](const auto& sfi) {
+							   return sfi.num_channels;
+						   },
+						   this->variant
+					   ) == ret;
+			},
+			SL
+		);
 		return ret;
 	}
 
@@ -217,14 +220,17 @@ public:
 	format get_format() const noexcept
 	{
 		auto ret = format(this->variant.index() % size_t(rasterimage::format::enum_size));
-		ASSERT(
-			format(std::visit(
-				[](const auto& sfi) {
-					return sfi.num_channels - 1;
-				},
-				this->variant
-			)) == ret
-		)
+		utki::assert(
+			[this, ret]() -> bool {
+				return format(std::visit(
+						   [](const auto& sfi) {
+							   return sfi.num_channels - 1;
+						   },
+						   this->variant
+					   )) == ret;
+			},
+			SL
+		);
 		return ret;
 	}
 
@@ -235,7 +241,7 @@ public:
 	depth get_depth() const noexcept
 	{
 		auto v = this->variant.index() / size_t(rasterimage::format::enum_size);
-		ASSERT(v < size_t(depth::enum_size))
+		utki::assert(v < size_t(depth::enum_size), SL);
 		return depth(v);
 	}
 

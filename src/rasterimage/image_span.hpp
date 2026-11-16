@@ -194,8 +194,8 @@ private:
 
 		difference_type operator-(const iterator_internal& i) const noexcept
 		{
-			ASSERT(!this->line.empty())
-			ASSERT(this->stride_px == i.stride_px)
+			utki::assert(!this->line.empty(), SL);
+			utki::assert(this->stride_px == i.stride_px, SL);
 			if (this->line.data() >= i.line.data()) {
 				return (this->line.data() - i.line.data()) / this->stride_px;
 			} else {
@@ -362,9 +362,13 @@ public:
 
 	image_span subspan(r4::rectangle<uint32_t> rect) noexcept
 	{
-		ASSERT(r4::rectangle<uint32_t>({0, 0}, this->dims()).contains(rect), [&](auto& o) {
-			o << "requested subspan is out of the span, this->dims() = " << this->dims() << ", rect = " << rect;
-		})
+		utki::assert(
+			r4::rectangle<uint32_t>({0, 0}, this->dims()).contains(rect),
+			[&](auto& o) {
+				o << "requested subspan is out of the span, this->dims() = " << this->dims() << ", rect = " << rect;
+			},
+			SL
+		);
 
 		return image_span( //
 			rect.d,
@@ -375,9 +379,13 @@ public:
 
 	const_image_span_type subspan(r4::rectangle<uint32_t> rect) const noexcept
 	{
-		ASSERT(r4::rectangle<uint32_t>({0, 0}, this->dims()).contains(rect), [&](auto& o) {
-			o << "requested subspan is out of the span, this->dims() = " << this->dims() << ", rect = " << rect;
-		})
+		utki::assert(
+			r4::rectangle<uint32_t>({0, 0}, this->dims()).contains(rect),
+			[&](auto& o) {
+				o << "requested subspan is out of the span, this->dims() = " << this->dims() << ", rect = " << rect;
+			},
+			SL
+		);
 
 		return const_image_span_type( //
 			rect.d,
@@ -420,22 +428,22 @@ public:
 			return;
 		}
 
-		ASSERT(dst_rect.p.is_positive_or_zero())
-		ASSERT(dst_rect.d.is_positive())
+		utki::assert(dst_rect.p.is_positive_or_zero(), SL);
+		utki::assert(dst_rect.d.is_positive(), SL);
 
 		// rectangle on the source span which will actually be blitted
 		auto src_rect = r4::rectangle<int>(max(-position, 0), dst_rect.d);
 
-		ASSERT(src_rect.p.is_positive_or_zero())
-		ASSERT(src_rect.d.is_positive())
-		ASSERT(r4::rectangle<int>(0, span.dims().template to<int>()).contains(src_rect))
+		utki::assert(src_rect.p.is_positive_or_zero(), SL);
+		utki::assert(src_rect.d.is_positive(), SL);
+		utki::assert(r4::rectangle<int>(0, span.dims().template to<int>()).contains(src_rect), SL);
 
 		auto dst_span = this->subspan(dst_rect.to<unsigned>());
 		auto src_span = span.subspan(src_rect.to<unsigned>());
 
-		ASSERT(!dst_span.empty())
-		ASSERT(!src_span.empty())
-		ASSERT(src_span.dims() == dst_span.dims())
+		utki::assert(!dst_span.empty(), SL);
+		utki::assert(!src_span.empty(), SL);
+		utki::assert(src_span.dims() == dst_span.dims(), SL);
 
 		for (auto [s, d] : utki::views::zip(src_span, dst_span)) {
 			std::copy(
@@ -475,7 +483,7 @@ public:
 		// NOTE: the std::prev(this->end()) cannot be used here because iterator_category is std::input_iterator_tag,
 		//       while std::prev() requires at least std::bidirectional_iterator_tag.
 		for (auto upper = this->begin(), lower = --this->end(); upper < lower; ++upper, --lower) {
-			ASSERT(upper->size() == lower->size())
+			utki::assert(upper->size() == lower->size(), SL);
 
 			for (auto u = upper->begin(), l = lower->begin(); u != upper->end(); ++u, ++l) {
 				using std::swap;

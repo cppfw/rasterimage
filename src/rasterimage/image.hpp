@@ -127,12 +127,16 @@ public:
 		dimensioned(dimensions),
 		buffer(std::move(buffer))
 	{
-		ASSERT(this->dims().x() * this->dims().y() == this->pixels().size(), [this](auto& o) {
-			o << "rasterimage::image::image(dims, buffer): dimensions do not match with pixels array size"
-			  << "\n";
-			o << "\t"
-			  << "dims = " << this->dims() << ", pixels().size() = " << this->pixels().size();
-		});
+		utki::assert(
+			this->dims().x() * this->dims().y() == this->pixels().size(),
+			[this](auto& o) {
+				o << "rasterimage::image::image(dims, buffer): dimensions do not match with pixels array size"
+				  << "\n";
+				o << "\t"
+				  << "dims = " << this->dims() << ", pixels().size() = " << this->pixels().size();
+			},
+			SL
+		);
 	}
 
 	/**
@@ -231,7 +235,7 @@ public:
 		auto src_row = data;
 
 		for (auto row : im.span()) {
-			ASSERT(row.size() * num_channels == num_values_per_row)
+			utki::assert(row.size() * num_channels == num_values_per_row, SL);
 			std::copy( //
 				src_row,
 				// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -243,7 +247,7 @@ public:
 			src_row += stride_in_values;
 		}
 
-		ASSERT(src_row == data + stride_in_values * im.dims().y())
+		utki::assert(src_row == data + stride_in_values * im.dims().y(), SL);
 
 		return im;
 	}

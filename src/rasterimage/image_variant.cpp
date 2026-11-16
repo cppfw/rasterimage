@@ -58,7 +58,7 @@ std::array<factory_type, sizeof...(index)> make_factories_array(std::index_seque
 size_t image_variant::to_variant_index(format pixel_format, depth channel_depth)
 {
 	auto ret = size_t(channel_depth) * size_t(format::enum_size) + size_t(pixel_format);
-	ASSERT(ret < std::variant_size_v<image_variant::variant_type>)
+	utki::assert(ret < std::variant_size_v<image_variant::variant_type>, SL);
 	return ret;
 }
 
@@ -69,7 +69,7 @@ image_variant::image_variant(const r4::vector2<uint32_t>& dimensions, format pix
 
 		auto i = to_variant_index(pixel_format, channel_depth);
 
-		ASSERT(i < factories_array.size())
+		utki::assert(i < factories_array.size(), SL);
 
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
 		return factories_array[i](dimensions);
@@ -79,7 +79,7 @@ image_variant::image_variant(const r4::vector2<uint32_t>& dimensions, format pix
 const dimensioned::dimensions_type& image_variant::dims() const noexcept
 {
 	try {
-		ASSERT(!this->variant.valueless_by_exception())
+		utki::assert(!this->variant.valueless_by_exception(), SL);
 		return std::visit(
 			[&](const dimensioned& im) -> const auto& {
 				return im.dims();
@@ -89,7 +89,7 @@ const dimensioned::dimensions_type& image_variant::dims() const noexcept
 	} catch (std::bad_variant_access&) {
 		// this->variant must never be valueless_by_exeception,
 		// so should never reach here
-		ASSERT(false)
+		utki::assert(false, SL);
 		abort();
 	}
 }
@@ -97,7 +97,7 @@ const dimensioned::dimensions_type& image_variant::dims() const noexcept
 bool image_variant::empty() const noexcept
 {
 	try {
-		ASSERT(!this->variant.valueless_by_exception())
+		utki::assert(!this->variant.valueless_by_exception(), SL);
 		return std::visit(
 			[&](const auto& im) {
 				return im.empty();
@@ -107,7 +107,7 @@ bool image_variant::empty() const noexcept
 	} catch (std::bad_variant_access&) {
 		// this->variant must never be valueless_by_exeception,
 		// so should never reach here
-		ASSERT(false)
+		utki::assert(false, SL);
 		abort();
 	}
 }
@@ -115,7 +115,7 @@ bool image_variant::empty() const noexcept
 size_t image_variant::buffer_size() const noexcept
 {
 	try {
-		ASSERT(!this->variant.valueless_by_exception())
+		utki::assert(!this->variant.valueless_by_exception(), SL);
 		return std::visit(
 			[&](const auto& im) {
 				return im.pixels().size();
@@ -125,7 +125,7 @@ size_t image_variant::buffer_size() const noexcept
 	} catch (std::bad_variant_access&) {
 		// this->variant must never be valueless_by_exeception,
 		// so should never reach here
-		ASSERT(false)
+		utki::assert(false, SL);
 		abort();
 	}
 }
@@ -135,9 +135,9 @@ void png_write_callback(png_structp png_ptr, png_bytep data, png_size_t length)
 {
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 	auto fi = reinterpret_cast<fsif::file*>(png_get_io_ptr(png_ptr));
-	ASSERT(fi)
+	utki::assert(fi, SL);
 
-	ASSERT(fi->is_open())
+	utki::assert(fi->is_open(), SL);
 
 	// TODO: check return value
 	fi->write(utki::make_span(data, length));
@@ -281,7 +281,7 @@ void png_read_callback(png_structp png_ptr, png_bytep data, png_size_t length)
 {
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 	auto fi = reinterpret_cast<const fsif::file*>(png_get_io_ptr(png_ptr));
-	ASSERT(fi)
+	utki::assert(fi, SL);
 
 	// TODO: get number of bytes read and check for EOF, rise error if needed
 	fi->read(utki::make_span(data, length));
@@ -290,7 +290,7 @@ void png_read_callback(png_structp png_ptr, png_bytep data, png_size_t length)
 
 image_variant rasterimage::read_png(const fsif::file& fi)
 {
-	ASSERT(!fi.is_open())
+	utki::assert(!fi.is_open(), SL);
 
 	// open file
 	fsif::file::guard file_guard(fi);
@@ -386,7 +386,7 @@ image_variant rasterimage::read_png(const fsif::file& fi)
 		if (bit_depth == sizeof(uint16_t) * utki::byte_bits) {
 			return depth::uint_16_bit;
 		} else {
-			ASSERT(bit_depth == utki::byte_bits)
+			utki::assert(bit_depth == utki::byte_bits, SL);
 			return depth::uint_8_bit;
 		}
 	}();
@@ -429,8 +429,8 @@ image_variant rasterimage::read_png(const fsif::file& fi)
 				// only 8 or 16 bit images are supported
 				throw std::invalid_argument("rasterimage::read_png(): unsupported image depth");
 			} else {
-				ASSERT((num_bytes_per_row * height) == image.pixels().size_bytes())
-				ASSERT(image.dims().y() != 0 && image.pixels().size() != 0)
+				utki::assert((num_bytes_per_row * height) == image.pixels().size_bytes(), SL);
+				utki::assert(image.dims().y() != 0 && image.pixels().size() != 0, SL);
 
 				// make an array of row pointers
 				std::vector<png_bytep> rows(image.dims().y());
@@ -442,7 +442,7 @@ image_variant rasterimage::read_png(const fsif::file& fi)
 						&image,
 #endif
 						i = image.span().begin()]() mutable {
-						ASSERT(i != image.span().end())
+						utki::assert(i != image.span().end(), SL);
 						auto ret = i->data();
 						++i;
 						// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
@@ -472,10 +472,10 @@ struct data_manager_jpeg_source {
 
 void jpeg_init_source_callback(j_decompress_ptr cinfo)
 {
-	ASSERT(cinfo)
+	utki::assert(cinfo, SL);
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 	auto src = reinterpret_cast<data_manager_jpeg_source*>(cinfo->src);
-	ASSERT(src)
+	utki::assert(src, SL);
 	src->sof = true;
 }
 
@@ -485,17 +485,17 @@ void jpeg_init_source_callback(j_decompress_ptr cinfo)
 //          FALSE if i/o error occured
 boolean jpeg_callback_fill_input_buffer(j_decompress_ptr cinfo)
 {
-	ASSERT(cinfo)
+	utki::assert(cinfo, SL);
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 	auto src = reinterpret_cast<data_manager_jpeg_source*>(cinfo->src);
-	ASSERT(src)
+	utki::assert(src, SL);
 
 	// read in JPEGINPUTBUFFERSIZE JOCTET's
 	size_t nbytes = 0;
 
 	try {
 		auto buf_wrapper = utki::make_span(src->buffer, sizeof(JOCTET) * jpeg_input_buffer_size);
-		ASSERT(src->fi)
+		utki::assert(src->fi, SL);
 		nbytes = src->fi->read(buf_wrapper);
 	} catch (std::runtime_error&) {
 		if (src->sof) {
@@ -521,10 +521,10 @@ boolean jpeg_callback_fill_input_buffer(j_decompress_ptr cinfo)
 // skip num_bytes (seek forward)
 void jpeg_callback_skip_input_data(j_decompress_ptr cinfo, long num_bytes)
 {
-	ASSERT(cinfo)
+	utki::assert(cinfo, SL);
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 	auto src = reinterpret_cast<data_manager_jpeg_source*>(cinfo->src);
-	ASSERT(src)
+	utki::assert(src, SL);
 	if (num_bytes <= 0) {
 		// nothing to skip
 		return;
@@ -637,14 +637,14 @@ image_variant rasterimage::read_jpeg(const fsif::file& fi)
 #ifdef DEBUG
 			using image_type = std::remove_reference_t<decltype(image)>;
 			using depth_type = typename image_type::pixel_type::value_type;
-			ASSERT(std::is_same_v<depth_type, uint8_t>)
+			utki::assert(std::is_same_v<depth_type, uint8_t>, SL);
 #endif
 			auto i = image.span().begin();
 			for (int y = 0; cinfo.output_scanline < image.dims().y(); ++y, ++i) {
 				// read the string into buffer
 				jpeg_read_scanlines(&cinfo, buffer, 1);
 
-				ASSERT(num_bytes_in_row == i->size_bytes())
+				utki::assert(num_bytes_in_row == i->size_bytes(), SL);
 
 				std::copy(
 					*buffer,

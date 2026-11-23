@@ -200,14 +200,12 @@ public:
 	{
 		auto ret = size_t(this->get_format()) + 1;
 		utki::assert(
-			[this, ret]() -> bool {
-				return std::visit(
-						   [](const auto& sfi) {
-							   return sfi.num_channels;
-						   },
-						   this->variant
-					   ) == ret;
-			},
+			std::visit(
+				[](const auto& sfi) {
+					return sfi.num_channels;
+				},
+				this->variant
+			) == ret,
 			SL
 		);
 		return ret;
@@ -221,14 +219,12 @@ public:
 	{
 		auto ret = format(this->variant.index() % size_t(rasterimage::format::enum_size));
 		utki::assert(
-			[this, ret]() -> bool {
-				return format(std::visit(
-						   [](const auto& sfi) {
-							   return sfi.num_channels - 1;
-						   },
-						   this->variant
-					   )) == ret;
-			},
+			format(std::visit(
+				[](const auto& sfi) {
+					return sfi.num_channels - 1;
+				},
+				this->variant
+			)) == ret,
 			SL
 		);
 		return ret;
